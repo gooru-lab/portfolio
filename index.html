@@ -1,39 +1,47 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="gooru — DevOps & Full-Stack. Production-системи для retail: боти, AI, ERP, BI, інфраструктура.">
+  <meta name="theme-color" content="#0b0d10">
   <title>gooru — Portfolio</title>
+  <link rel="canonical" href="https://gooru-lab.github.io/portfolio/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Sora:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script src="theme.js"></script>
 </head>
 <body>
   <div class="wrap">
     <header class="topbar">
       <a class="brand-mark" href="index.html">gooru</a>
-      <nav class="lang" aria-label="Мова">
-        <a href="index.html" aria-current="page">UA</a>
-        <a href="index-en.html">EN</a>
-      </nav>
+      <div class="topbar-controls">
+        <nav class="lang" aria-label="Мова">
+          <a href="index.html" aria-current="page">UA</a>
+          <a href="index-en.html">EN</a>
+        </nav>
+        <button type="button" class="theme-toggle" id="theme-toggle">Світла</button>
+      </div>
     </header>
 
     <section class="hero">
-      <p class="hero-kicker">DevOps &amp; Full-Stack</p>
+      <p class="hero-kicker">DevOps &amp; Full-Stack · retail production</p>
       <h1>gooru</h1>
       <p class="hero-lead">Повний контур production для retail: Telegram/API → Docker → адмінка → моніторинг → документація. Знаю операційку зсередини (прихід, розцінка, звіти, акції в магазинах) — тому автоматизую те, що реально болить на точках.</p>
       <div class="cta-row">
         <a class="btn btn-primary" href="mailto:sergey.petrenko7733@gmail.com">Написати</a>
-        <a class="btn btn-ghost" href="https://github.com/ambarexpressmarket-lab" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-ghost" href="https://github.com/gooru-lab" target="_blank" rel="noopener">GitHub</a>
         <a class="btn btn-ghost" href="portfolio.pdf">PDF</a>
       </div>
       <p class="meta-line">
         Live:
         <a href="https://ambar-market.com" target="_blank" rel="noopener">ambar-market.com</a>
         ·
-        <a href="https://demo-repo-iota-tawny.vercel.app" target="_blank" rel="noopener">demo (Vercel)</a>
+        <a href="https://demo-repo-iota-tawny.vercel.app" target="_blank" rel="noopener">demo</a>
+        ·
+        <a href="https://gooru-lab.github.io/portfolio/">gooru-lab.github.io/portfolio</a>
       </p>
     </section>
 
@@ -145,7 +153,7 @@
           </div>
         </div>
         <p class="problem"><strong>Задача:</strong> офіційні канали сповіщень мережі — не «з сірого номера», а узгоджений відправник під бренд.</p>
-        <p><strong>Зробив:</strong> подав і провів реєстрацію офіційного SMS-відправника та окремо офіційного Viber-відправника для retail-мережі; налаштував і проводив розсилки через TurboSMS (та подібні сервіси) — альфа-імена / sender ID, шаблони, робочі кампанії.</p>
+        <p><strong>Зробив:</strong> подав і провів реєстрацію офіційного SMS-відправника та окремо офіційного Viber-відправника для retail-мережі; налаштував і проводив розсилки через TurboSMS — альфа-імена / sender ID, шаблони, робочі кампанії.</p>
       </article>
 
       <article class="case">
@@ -221,6 +229,10 @@
       <h2 class="section-title">Де подивитись наживо</h2>
       <div class="links">
         <div class="link-row">
+          <strong>Портфоліо</strong>
+          <a href="https://gooru-lab.github.io/portfolio/">gooru-lab.github.io/portfolio</a>
+        </div>
+        <div class="link-row">
           <strong>Сайт</strong>
           <a href="https://ambar-market.com" target="_blank" rel="noopener">ambar-market.com</a>
         </div>
@@ -230,7 +242,9 @@
         </div>
         <div class="link-row">
           <strong>GitHub</strong>
-          <a href="https://github.com/ambarexpressmarket-lab" target="_blank" rel="noopener">ambarexpressmarket-lab</a>
+          <a href="https://github.com/gooru-lab" target="_blank" rel="noopener">gooru-lab</a>
+          ·
+          <a href="https://github.com/gooru-lab/portfolio" target="_blank" rel="noopener">portfolio repo</a>
         </div>
         <div class="link-row">
           <strong>Email</strong>

@@ -1,42 +1,27 @@
 # gooru — Portfolio
 
-Статичне портфоліо (UA / EN) для Freelancehunt, заявок і LinkedIn.
+Публічний сайт: **https://gooru-lab.github.io/portfolio/**
+
+Репо: https://github.com/gooru-lab/portfolio
 
 ## Локально
-
-Відкрий `index.html` у браузері або:
 
 ```powershell
 cd "c:\work ambar and other\portfolio"
 python -m http.server 8080
 ```
 
-Далі: http://localhost:8080
+http://localhost:8080
 
-## Публікація на GitHub Pages
+## Теми
 
-Потрібен логін: `gh auth login`
+Кнопка **Світла / Темна** (Light / Dark) у шапці. Вибір зберігається в `localStorage`.
 
-```powershell
-cd "c:\work ambar and other\portfolio"
-git init
-git add index.html index-en.html styles.css README.md portfolio.pdf portfolio-en.pdf loyalty payroll bi cloud corporate-site
-git commit -m "Add public portfolio site"
-gh repo create serhiy-petrenko-portfolio --public --source=. --remote=origin --push
-```
+## Шрифти
 
-У репо: **Settings → Pages → Deploy from branch `main` / root**.
+- Display: **Sora**
+- Body: **Literata**
 
-Публічний URL:
-`https://gooru-lab.github.io/serhiy-petrenko-portfolio/`
+## Деплой
 
-Репо: https://github.com/gooru-lab/serhiy-petrenko-portfolio
-
-## PDF
-
-Наявні: `portfolio.pdf`, `portfolio-en.pdf`.  
-Перегенерація: `python create_pdf.py` (потрібні шрифти в `../fonts/`).
-
-## NDA
-
-Скріни sanitized. Не викладати auth-URL і секрети.
+Push у `main` → GitHub Pages (branch `main`, root).
