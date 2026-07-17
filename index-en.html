@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Serhiy Petrenko — DevOps & Full-Stack. Production retail systems: bots, AI, ERP, BI, infrastructure.">
+  <title>Serhiy Petrenko — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <a class="brand-mark" href="index-en.html">Serhiy Petrenko</a>
+      <nav class="lang" aria-label="Language">
+        <a href="index.html">UA</a>
+        <a href="index-en.html" aria-current="page">EN</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <p class="hero-kicker">DevOps &amp; Full-Stack</p>
+      <h1>Serhiy Petrenko</h1>
+      <p class="hero-lead">Full production loop for retail: Telegram/API → Docker → admin → monitoring → docs. Not “one landing page”.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="mailto:sergey.petrenko7733@gmail.com">Email me</a>
+        <a class="btn btn-ghost" href="https://github.com/ambarexpressmarket-lab" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-ghost" href="portfolio-en.pdf">PDF</a>
+      </div>
+      <p class="meta-line">
+        Live:
+        <a href="https://ambar-market.com" target="_blank" rel="noopener">ambar-market.com</a>
+        ·
+        <a href="https://demo-repo-iota-tawny.vercel.app" target="_blank" rel="noopener">demo (Vercel)</a>
+      </p>
+    </section>
+
+    <section id="work">
+      <p class="section-label">Work</p>
+      <h2 class="section-title">Selected production projects</h2>
+
+      <article class="case">
+        <div class="case-head">
+          <h3>Telegram bots + retail ops</h3>
+          <div class="case-tags">
+            <span class="tag">Python</span>
+            <span class="tag">FastAPI</span>
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">Docker</span>
+          </div>
+        </div>
+        <p class="problem"><strong>Problem:</strong> capture field orders, notify owners, report and sync with 1C without spreadsheet chaos.</p>
+        <p><strong>Built:</strong> step-by-step bots, web admin (routes, points, products), HTML/CSV/XLSX/PDF reports, XML for 1C, Nextcloud/CalDAV, mail and price monitoring.</p>
+      </article>
+
+      <article class="case">
+        <div class="case-head">
+          <h3>AI assistant &amp; document/OCR pipelines</h3>
+          <div class="case-tags">
+            <span class="tag">OpenAI</span>
+            <span class="tag">Function calling</span>
+            <span class="tag">OCR</span>
+            <span class="tag">React</span>
+          </div>
+        </div>
+        <p class="problem"><strong>Problem:</strong> answers grounded in real API/document data — no model hallucinations in production.</p>
+        <p><strong>Built:</strong> Telegram → OpenAI → tools/external APIs; invoice-agent (LLM/OCR → structured data → 1C flow) with FastAPI + React + Docker.</p>
+      </article>
+
+      <article class="case">
+        <div class="case-head">
+          <h3>Payroll &amp; HR ERP</h3>
+          <div class="case-tags">
+            <span class="tag">Node.js</span>
+            <span class="tag">Express</span>
+            <span class="tag">Prisma</span>
+            <span class="tag">PostgreSQL</span>
+          </div>
+        </div>
+        <p class="problem"><strong>Problem:</strong> payroll, timesheets, KPI and adjustments in one system instead of scattered sheets.</p>
+        <p><strong>Built:</strong> full-stack ERP (~80 retail locations): employees, schedule, salary calc, KPI, payroll views and details.</p>
+        <div class="shots">
+          <figure>
+            <img src="payroll/01-home.png" alt="Payroll dashboard" loading="lazy">
+            <figcaption>Dashboard</figcaption>
+          </figure>
+          <figure>
+            <img src="payroll/02-payroll-details.png" alt="Payroll details" loading="lazy">
+            <figcaption>Payroll details</figcaption>
+          </figure>
+          <figure>
+            <img src="payroll/03-payroll-view.png" alt="Payroll view" loading="lazy">
+            <figcaption>Payroll view</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="case-head">
+          <h3>Loyalty Admin</h3>
+          <div class="case-tags">
+            <span class="tag">React</span>
+            <span class="tag">FastAPI</span>
+            <span class="tag">1C</span>
+          </div>
+        </div>
+        <p class="problem"><strong>Problem:</strong> monitor receipts and loyalty points with accounting integration.</p>
+        <p><strong>Built:</strong> admin panel: checks monitoring, categories, 1C integration.</p>
+        <div class="shots">
+          <figure>
+            <img src="loyalty/01-checks-monitoring.png" alt="Checks monitoring" loading="lazy">
+            <figcaption>Checks monitoring</figcaption>
+          </figure>
+          <figure>
+            <img src="loyalty/02-categories.png" alt="Categories" loading="lazy">
+            <figcaption>Categories</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="case-head">
+          <h3>SMS / Viber messaging for retail</h3>
+          <div class="case-tags">
+            <span class="tag">TurboSMS</span>
+            <span class="tag">SMS</span>
+            <span class="tag">Viber</span>
+            <span class="tag">Sender ID</span>
+          </div>
+        </div>
+        <p class="problem"><strong>Problem:</strong> official notification channels for a retail chain — branded senders, not grey-route numbers.</p>
+        <p><strong>Built:</strong> registered an official SMS sender and a separate official Viber sender for the retail network; set up and ran campaigns via TurboSMS (and similar) — alpha names / sender IDs, templates, production mailings.</p>
+      </article>
+
+      <article class="case">
+        <div class="case-head">
+          <h3>BI + cloud + corporate site</h3>
+          <div class="case-tags">
+            <span class="tag">Metabase</span>
+            <span class="tag">Nextcloud</span>
+            <span class="tag">PHP</span>
+            <span class="tag">Hetzner</span>
+          </div>
+        </div>
+        <p class="problem"><strong>Problem:</strong> sales/inventory analytics, team file cloud, and public retail site.</p>
+        <p><strong>Built:</strong> ETL → PostgreSQL → Metabase/PostgREST; Nextcloud + OnlyOffice; store locator (Maps) + CMS. VPS deploy and monitoring.</p>
+        <div class="shots">
+          <figure>
+            <img src="bi/01-metabase-home.png" alt="Metabase" loading="lazy">
+            <figcaption>Metabase</figcaption>
+          </figure>
+          <figure>
+            <img src="bi/03-gross-profit.png" alt="Gross profit" loading="lazy">
+            <figcaption>Gross profit</figcaption>
+          </figure>
+          <figure>
+            <img src="cloud/01-nextcloud-dashboard.png" alt="Nextcloud" loading="lazy">
+            <figcaption>Nextcloud</figcaption>
+          </figure>
+          <figure>
+            <img src="corporate-site/01-homepage.png" alt="Corporate site" loading="lazy">
+            <figcaption>Corporate site</figcaption>
+          </figure>
+          <figure>
+            <img src="corporate-site/02-stores-map.png" alt="Store map" loading="lazy">
+            <figcaption>Store map</figcaption>
+          </figure>
+        </div>
+      </article>
+    </section>
+
+    <section id="stack">
+      <p class="section-label">Skills</p>
+      <h2 class="section-title">How I ship systems</h2>
+      <div class="stack-grid">
+        <div class="stack-block">
+          <h3>Backend</h3>
+          <p>Python FastAPI · Node Express / Prisma · PHP · PostgreSQL / MySQL / SQLite · REST API</p>
+        </div>
+        <div class="stack-block">
+          <h3>Frontend / Mobile</h3>
+          <p>React / TypeScript / Vite / Tailwind / Next · vanilla JS · Android Compose</p>
+        </div>
+        <div class="stack-block">
+          <h3>AI</h3>
+          <p>OpenAI API · function calling · OCR / vision · KB / prompts · analysis automation</p>
+        </div>
+        <div class="stack-block">
+          <h3>DevOps</h3>
+          <p>Docker Compose · Hetzner · nginx · systemd · Prometheus / Grafana · GitHub Actions</p>
+        </div>
+        <div class="stack-block">
+          <h3>Integrations</h3>
+          <p>Telegram · 1C / CommerceML · Nextcloud (CalDAV / WebDAV / Deck) · Firebase · Metabase / PostgREST · Google Maps</p>
+        </div>
+        <div class="stack-block">
+          <h3>Messaging / campaigns</h3>
+          <p>Official SMS sender · official Viber sender · TurboSMS · alpha names / sender ID · retail campaigns</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="links">
+      <p class="section-label">Links</p>
+      <h2 class="section-title">See it live</h2>
+      <div class="links">
+        <div class="link-row">
+          <strong>Website</strong>
+          <a href="https://ambar-market.com" target="_blank" rel="noopener">ambar-market.com</a>
+        </div>
+        <div class="link-row">
+          <strong>Demo</strong>
+          <a href="https://demo-repo-iota-tawny.vercel.app" target="_blank" rel="noopener">demo-repo (Vercel)</a>
+        </div>
+        <div class="link-row">
+          <strong>GitHub</strong>
+          <a href="https://github.com/ambarexpressmarket-lab" target="_blank" rel="noopener">ambarexpressmarket-lab</a>
+        </div>
+        <div class="link-row">
+          <strong>Email</strong>
+          <a href="mailto:sergey.petrenko7733@gmail.com">sergey.petrenko7733@gmail.com</a>
+        </div>
+        <div class="link-row">
+          <strong>PDF</strong>
+          <a href="portfolio.pdf">portfolio.pdf</a>
+          ·
+          <a href="portfolio-en.pdf">portfolio-en.pdf</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>NDA systems are shown via description and sanitized screenshots — no auth URLs or secrets.</p>
+      <p>© 2026 Serhiy Petrenko</p>
+    </footer>
+  </div>
+</body>
+</html>
