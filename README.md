@@ -1,4 +1,4 @@
-# Serhiy Petrenko — Portfolio
+# gooru — Portfolio
 
 Статичне портфоліо (UA / EN) для Freelancehunt, заявок і LinkedIn.
 
@@ -27,8 +27,10 @@ gh repo create serhiy-petrenko-portfolio --public --source=. --remote=origin --p
 
 У репо: **Settings → Pages → Deploy from branch `main` / root**.
 
-**Публічний URL:** https://gooru-lab.github.io/serhiy-petrenko-portfolio/  
-**Репо:** https://github.com/gooru-lab/serhiy-petrenko-portfolio
+Публічний URL:
+`https://gooru-lab.github.io/serhiy-petrenko-portfolio/`
+
+Репо: https://github.com/gooru-lab/serhiy-petrenko-portfolio
 
 ## PDF
 
