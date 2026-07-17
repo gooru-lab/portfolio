@@ -27,10 +27,8 @@ gh repo create serhiy-petrenko-portfolio --public --source=. --remote=origin --p
 
 У репо: **Settings → Pages → Deploy from branch `main` / root**.
 
-URL буде приблизно:
-`https://<username>.github.io/serhiy-petrenko-portfolio/`
-
-Після публікації додай URL у Notion Personal OS і в заявки.
+**Публічний URL:** https://gooru-lab.github.io/serhiy-petrenko-portfolio/  
+**Репо:** https://github.com/gooru-lab/serhiy-petrenko-portfolio
 
 ## PDF
 
