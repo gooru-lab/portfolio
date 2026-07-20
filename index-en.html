@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="gooru — DevOps & Full-Stack. Production retail systems: bots, AI, ERP, BI, infrastructure.">
+  <meta name="description" content="gooru — DevOps, Full-Stack and production AI for retail: bots, OpenAI/OCR, ERP, BI, infrastructure.">
   <meta name="theme-color" content="#0b0d10">
   <title>gooru — Portfolio</title>
   <link rel="canonical" href="https://gooru-lab.github.io/portfolio/index-en.html">
@@ -27,9 +27,9 @@
     </header>
 
     <section class="hero">
-      <p class="hero-kicker">DevOps &amp; Full-Stack · retail production</p>
+      <p class="hero-kicker">DevOps &amp; Full-Stack · AI for retail</p>
       <h1>gooru</h1>
-      <p class="hero-lead">Full production loop for retail: Telegram/API → Docker → admin → monitoring → docs. I know store ops from the floor (receiving, pricing, reports, in-store promos) — so I automate what actually hurts in retail.</p>
+      <p class="hero-lead">Full production loop for retail: Telegram/API → Docker → admin → monitoring → docs. I ship production AI (OpenAI, function calling, OCR) on real data — no model-made-up prices or stock. I know store ops from the floor — so I automate what actually hurts.</p>
       <div class="cta-row">
         <a class="btn btn-primary" href="mailto:sergey.petrenko7733@gmail.com">Email me</a>
         <a class="btn btn-ghost" href="https://github.com/gooru-lab" target="_blank" rel="noopener">GitHub</a>
@@ -63,6 +63,24 @@
 
       <article class="case">
         <div class="case-head">
+          <h3>Production AI: assistant + OCR / documents</h3>
+          <div class="case-tags">
+            <span class="tag">OpenAI</span>
+            <span class="tag">Function calling</span>
+            <span class="tag">OCR</span>
+            <span class="tag">FastAPI</span>
+            <span class="tag">React</span>
+          </div>
+        </div>
+        <p class="problem"><strong>Problem:</strong> business AI must answer and fetch data only from real APIs / documents — no hallucinated prices, stock, or totals.</p>
+        <p><strong>Built:</strong></p>
+        <p>- Telegram assistant → OpenAI → function calling / tools → external APIs and knowledge base; answers only on verified data.</p>
+        <p>- invoice-agent: LLM + OCR/vision → structured fields from invoices → 1C-oriented flow (FastAPI + React + Docker).</p>
+        <p>- Prompts, KB, API error handling, VPS deploy — as a normal production service, not a demo chat.</p>
+      </article>
+
+      <article class="case">
+        <div class="case-head">
           <h3>Telegram bots + retail ops</h3>
           <div class="case-tags">
             <span class="tag">Python</span>
@@ -73,20 +91,6 @@
         </div>
         <p class="problem"><strong>Problem:</strong> capture field orders, notify owners, report and sync with 1C without spreadsheet chaos.</p>
         <p><strong>Built:</strong> step-by-step bots, web admin (routes, points, products), HTML/CSV/XLSX/PDF reports, XML for 1C, Nextcloud/CalDAV, mail and price monitoring.</p>
-      </article>
-
-      <article class="case">
-        <div class="case-head">
-          <h3>AI assistant &amp; document/OCR pipelines</h3>
-          <div class="case-tags">
-            <span class="tag">OpenAI</span>
-            <span class="tag">Function calling</span>
-            <span class="tag">OCR</span>
-            <span class="tag">React</span>
-          </div>
-        </div>
-        <p class="problem"><strong>Problem:</strong> answers grounded in real API/document data — no model hallucinations in production.</p>
-        <p><strong>Built:</strong> Telegram → OpenAI → tools/external APIs; invoice-agent (LLM/OCR → structured data → 1C flow) with FastAPI + React + Docker.</p>
       </article>
 
       <article class="case">
@@ -205,7 +209,7 @@
         </div>
         <div class="stack-block">
           <h3>AI</h3>
-          <p>OpenAI API · function calling · OCR / vision · KB / prompts · analysis automation</p>
+          <p>OpenAI API · function calling / tool use · OCR / vision · KB &amp; prompts · fact-grounded answers · document &amp; dialog automation in production</p>
         </div>
         <div class="stack-block">
           <h3>DevOps</h3>
