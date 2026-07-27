@@ -119,24 +119,42 @@ a:hover {
 
 .lang {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.2rem;
   font-family: var(--font-display);
   font-size: 0.8rem;
   font-weight: 600;
 }
 
-.lang a {
+.lang a,
+.lang button {
+  appearance: none;
   color: var(--muted);
-  padding: 0.35rem 0.6rem;
+  padding: 0.32rem 0.48rem;
   border: 1px solid transparent;
   border-radius: 999px;
+  background: transparent;
   text-decoration: none;
+  font: inherit;
+  cursor: pointer;
+  letter-spacing: 0.02em;
 }
 
-.lang a[aria-current="page"] {
+.lang a[aria-current="page"],
+.lang button[aria-current="page"] {
   color: var(--ink);
   border-color: var(--line);
   background: var(--bg-elev);
+}
+
+.lang button:hover,
+.lang a:hover {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.lang button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .theme-toggle {
@@ -172,6 +190,49 @@ a:hover {
   animation: rise 0.7s ease both;
 }
 
+.hero--contour {
+  position: relative;
+  isolation: isolate;
+  min-height: min(92vh, 820px);
+  display: grid;
+  align-items: end;
+  padding: 5.5rem 0 3.25rem;
+  overflow: hidden;
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 34rem;
+  animation: rise 0.85s ease both;
+}
+
+.contour-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.contour-stage canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: auto;
+  opacity: 1;
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.25) 18%, #000 38%, #000 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.25) 18%, #000 38%, #000 100%);
+}
+
+.hero-copy h1 {
+  text-shadow: 0 0 40px color-mix(in srgb, var(--bg) 75%, transparent);
+}
+
+.hero-copy .hero-lead,
+.hero-copy .hero-kicker {
+  text-shadow: 0 1px 18px color-mix(in srgb, var(--bg) 85%, transparent);
+}
+
 @keyframes rise {
   from {
     opacity: 0;
@@ -196,15 +257,15 @@ a:hover {
 .hero h1 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(3rem, 9vw, 5.4rem);
+  font-size: clamp(3.4rem, 11vw, 6.2rem);
   font-weight: 700;
-  line-height: 0.95;
+  line-height: 0.92;
   letter-spacing: -0.05em;
 }
 
 .hero-lead {
   margin: 1.4rem 0 0;
-  max-width: 38rem;
+  max-width: 34rem;
   color: var(--muted);
   font-size: 1.12rem;
   font-weight: 400;
@@ -456,9 +517,40 @@ footer p {
   margin: 0.35rem 0;
 }
 
+@media (max-width: 900px) {
+  .hero--contour {
+    min-height: auto;
+    align-items: start;
+    padding-top: 3.5rem;
+  }
+
+  .contour-stage {
+    position: relative;
+    inset: auto;
+    height: 280px;
+    margin: 0.5rem 0 0.25rem;
+    order: -1;
+  }
+
+  .hero--contour {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contour-stage canvas {
+    mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+    opacity: 0.85;
+  }
+}
+
 @media (max-width: 640px) {
   .hero {
     padding: 3.25rem 0 2.75rem;
+  }
+
+  .hero--contour {
+    padding: 2.75rem 0 2.5rem;
   }
 
   .cta-row {
@@ -472,6 +564,10 @@ footer p {
   .topbar {
     flex-wrap: wrap;
   }
+
+  .lang button {
+    padding: 0.32rem 0.45rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -480,6 +576,7 @@ footer p {
   }
 
   .hero,
+  .hero-copy,
   .btn,
   .shots figure,
   .shots img,
