@@ -30,7 +30,7 @@
       </div>
     </header>
 
-    <section class="hero hero--contour">
+        <section class="hero hero--split">
       <div class="hero-copy">
         <p class="hero-kicker" data-i18n="kicker">DevOps &amp; Full-Stack · AI for retail</p>
         <h1>gooru</h1>
@@ -47,8 +47,11 @@
           <a href="https://gooru-lab.github.io/portfolio/">gooru-lab.github.io/portfolio</a>
         </p>
       </div>
-      <div class="contour-stage" id="contour-stage" aria-hidden="true">
-        <canvas id="contour-canvas"></canvas>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-stage" id="hero-stage">
+          <canvas id="hero-canvas"></canvas>
+          <div class="hero-face-caption" id="hero-face-caption"></div>
+        </div>
       </div>
     </section>
 
@@ -271,6 +274,7 @@
       <p>© 2026 gooru</p>
     </footer>
   </div>
-  <script src="contour.js"></script>
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="hero3d.js"></script>
 </body>
 </html>

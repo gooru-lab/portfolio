@@ -25,7 +25,8 @@ http://localhost:8080
 
 ## Hero
 
-Canvas-схема «контур production»: каса → API/бот → Docker → адмінка → моніторинг (`contour.js`).
+Split-layout: текст зліва, справа Three.js 3D-куб (`hero3d.js`) з гранями контуру
+каса → API/бот → Docker → адмінка → моніторинг (+ gooru), орбіти/частинки, caption під кубом.
 
 ## Шрифти
 
