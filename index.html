@@ -47,9 +47,23 @@
           <a href="https://gooru-lab.github.io/portfolio/">gooru-lab.github.io/portfolio</a>
         </p>
       </div>
-      <div class="hero-visual" aria-hidden="true">
+            <div class="hero-visual" aria-hidden="true">
         <div class="hero-stage" id="hero-stage">
-          <canvas id="hero-canvas"></canvas>
+          <div class="cube-scene" id="cube-scene">
+            <div class="cube-orbit"></div>
+            <div class="cube-orbit cube-orbit--delay"></div>
+            <div class="cube-spark s1"></div>
+            <div class="cube-spark s2"></div>
+            <div class="cube-spark s3"></div>
+            <div class="hero-cube" id="hero-cube">
+              <div class="cube-face face-front"><span class="cube-face-title">POS</span><span class="cube-face-hint">POS · 1C</span></div>
+              <div class="cube-face face-back"><span class="cube-face-title">Admin</span><span class="cube-face-hint">React · ERP</span></div>
+              <div class="cube-face face-right"><span class="cube-face-title">API / bot</span><span class="cube-face-hint">Telegram · FastAPI</span></div>
+              <div class="cube-face face-left"><span class="cube-face-title">Docker</span><span class="cube-face-hint">Compose · VPS</span></div>
+              <div class="cube-face face-top"><span class="cube-face-title">Monitor</span><span class="cube-face-hint">Prometheus · Grafana</span></div>
+              <div class="cube-face face-bottom"><span class="cube-face-title">gooru</span><span class="cube-face-hint">Full production contour</span></div>
+            </div>
+          </div>
           <div class="hero-face-caption" id="hero-face-caption"></div>
         </div>
       </div>
@@ -274,7 +288,6 @@
       <p>© 2026 gooru</p>
     </footer>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-  <script src="hero3d.js"></script>
+  <script src="hero-cube.js"></script>
 </body>
 </html>

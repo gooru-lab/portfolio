@@ -25,8 +25,9 @@ http://localhost:8080
 
 ## Hero
 
-Split-layout: текст зліва, справа Three.js 3D-куб (`hero3d.js`) з гранями контуру
-каса → API/бот → Docker → адмінка → моніторинг (+ gooru), орбіти/частинки, caption під кубом.
+Split-layout: текст зліва, справа легкий CSS 3D-куб (`hero-cube.js`) з гранями контуру.
+Без Three.js — швидко на телефоні й ПК.
+
 
 ## Шрифти
 
