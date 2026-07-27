@@ -1,374 +1,480 @@
-(function () {
-  "use strict";
+import * as THREE from "three";
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 
-  var stage = null;
-  var canvas = null;
-  var caption = null;
-  var renderer = null;
-  var scene = null;
-  var camera = null;
-  var cube = null;
-  var satellites = [];
-  var particles = null;
-  var ring = null;
-  var raf = 0;
-  var reduced = false;
-  var pointer = { x: 0, y: 0 };
-  var targetTilt = { x: 0.2, y: -0.35 };
-  var faceIndex = 0;
-  var lastFace = -1;
-  var clockStart = 0;
-
-  var faces = [
+const state = {
+  stage: null,
+  canvas: null,
+  caption: null,
+  renderer: null,
+  composer: null,
+  scene: null,
+  camera: null,
+  cube: null,
+  group: null,
+  floor: null,
+  satellites: [],
+  particles: null,
+  ring: null,
+  envMap: null,
+  raf: 0,
+  reduced: false,
+  pointer: { x: 0, y: 0 },
+  faceIndex: 0,
+  lastFace: -1,
+  clockStart: 0,
+  faces: [
     { title: "POS", hint: "POS · 1C" },
     { title: "API / bot", hint: "Telegram · FastAPI" },
     { title: "Docker", hint: "Compose · VPS" },
     { title: "Admin", hint: "React · ERP" },
     { title: "Monitor", hint: "Prometheus · Grafana" },
     { title: "gooru", hint: "Full production contour" },
-  ];
+  ],
+};
 
-  function css(name, fallback) {
-    var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-    return v || fallback;
+function css(name, fallback) {
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return v || fallback;
+}
+
+function parseHex(hex, fallback) {
+  try {
+    return new THREE.Color(hex || fallback);
+  } catch {
+    return new THREE.Color(fallback);
   }
+}
 
-  function hexToThree(hex, fallback) {
-    try {
-      return new THREE.Color(hex || fallback);
-    } catch (e) {
-      return new THREE.Color(fallback);
-    }
+function isDarkTheme() {
+  return (document.documentElement.getAttribute("data-theme") || "dark") !== "light";
+}
+
+function makeFaceTexture(title, hint, accentHex, dark) {
+  const size = 1024;
+  const c = document.createElement("canvas");
+  c.width = size;
+  c.height = size;
+  const ctx = c.getContext("2d");
+
+  // brushed metal base
+  const base = ctx.createLinearGradient(0, 0, size, size);
+  if (dark) {
+    base.addColorStop(0, "#1a1f28");
+    base.addColorStop(0.45, "#12161d");
+    base.addColorStop(1, "#0d1015");
+  } else {
+    base.addColorStop(0, "#f4f6f8");
+    base.addColorStop(0.5, "#e8ecef");
+    base.addColorStop(1, "#d9dee4");
   }
+  ctx.fillStyle = base;
+  ctx.fillRect(0, 0, size, size);
 
-  function makeFaceTexture(title, hint, accentHex, bgHex, inkHex) {
-    var size = 512;
-    var c = document.createElement("canvas");
-    c.width = size;
-    c.height = size;
-    var ctx = c.getContext("2d");
+  // brushed lines
+  ctx.globalAlpha = dark ? 0.08 : 0.12;
+  ctx.strokeStyle = dark ? "#ffffff" : "#000000";
+  ctx.lineWidth = 1;
+  for (let i = 0; i < size; i += 3) {
+    ctx.beginPath();
+    ctx.moveTo(0, i + (Math.random() * 2 - 1));
+    ctx.lineTo(size, i + (Math.random() * 2 - 1));
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
 
-    ctx.fillStyle = bgHex;
-    ctx.fillRect(0, 0, size, size);
+  // soft vignette
+  const vig = ctx.createRadialGradient(size / 2, size / 2, size * 0.2, size / 2, size / 2, size * 0.72);
+  vig.addColorStop(0, "rgba(0,0,0,0)");
+  vig.addColorStop(1, dark ? "rgba(0,0,0,0.55)" : "rgba(0,0,0,0.12)");
+  ctx.fillStyle = vig;
+  ctx.fillRect(0, 0, size, size);
 
-    // subtle grid
-    ctx.strokeStyle = accentHex + "33";
-    ctx.lineWidth = 2;
-    for (var i = 0; i <= 8; i++) {
-      var p = (i / 8) * size;
-      ctx.beginPath();
-      ctx.moveTo(p, 0);
-      ctx.lineTo(p, size);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(0, p);
-      ctx.lineTo(size, p);
-      ctx.stroke();
-    }
+  // inset panel
+  const pad = 70;
+  ctx.fillStyle = dark ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.45)";
+  roundRect(ctx, pad, pad, size - pad * 2, size - pad * 2, 48);
+  ctx.fill();
+  ctx.strokeStyle = accentHex;
+  ctx.lineWidth = 5;
+  ctx.stroke();
 
-    // border frame
-    ctx.strokeStyle = accentHex;
-    ctx.lineWidth = 14;
-    ctx.strokeRect(28, 28, size - 56, size - 56);
+  // inner glow edge
+  ctx.strokeStyle = dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
+  ctx.lineWidth = 2;
+  roundRect(ctx, pad + 14, pad + 14, size - (pad + 14) * 2, size - (pad + 14) * 2, 36);
+  ctx.stroke();
 
-    // corner ticks
-    ctx.lineWidth = 6;
-    var tick = 42;
-    [
-      [28, 28],
-      [size - 28, 28],
-      [28, size - 28],
-      [size - 28, size - 28],
-    ].forEach(function (pt) {
-      ctx.beginPath();
-      ctx.moveTo(pt[0], pt[1]);
-      ctx.lineTo(pt[0] + (pt[0] < size / 2 ? tick : -tick), pt[1]);
-      ctx.moveTo(pt[0], pt[1]);
-      ctx.lineTo(pt[0], pt[1] + (pt[1] < size / 2 ? tick : -tick));
-      ctx.stroke();
+  // accent chip
+  ctx.fillStyle = accentHex;
+  roundRect(ctx, size / 2 - 54, 120, 108, 10, 6);
+  ctx.fill();
+
+  // title
+  ctx.fillStyle = accentHex;
+  ctx.font = "700 92px Sora, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.shadowColor = accentHex;
+  ctx.shadowBlur = dark ? 28 : 8;
+  ctx.fillText(title, size / 2, size / 2 - 10);
+  ctx.shadowBlur = 0;
+
+  // hint
+  ctx.fillStyle = dark ? "rgba(230,235,240,0.78)" : "rgba(30,35,40,0.72)";
+  ctx.font = "600 36px Sora, sans-serif";
+  ctx.fillText(hint, size / 2, size / 2 + 78);
+
+  // micro label
+  ctx.globalAlpha = 0.45;
+  ctx.font = "600 22px Sora, sans-serif";
+  ctx.fillText("PRODUCTION NODE", size / 2, size - 120);
+  ctx.globalAlpha = 1;
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 8;
+  tex.needsUpdate = true;
+  return tex;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function buildMaterials() {
+  const accent = css("--accent", "#e2b13c");
+  const dark = isDarkTheme();
+  // Box / RoundedBox material order: +x -x +y -y +z -z
+  const order = [1, 3, 4, 5, 0, 2];
+  return order.map((idx) => {
+    const f = state.faces[idx];
+    return new THREE.MeshPhysicalMaterial({
+      map: makeFaceTexture(f.title, f.hint, accent, dark),
+      metalness: dark ? 0.85 : 0.35,
+      roughness: dark ? 0.22 : 0.28,
+      clearcoat: 1,
+      clearcoatRoughness: 0.12,
+      envMapIntensity: dark ? 1.35 : 0.9,
+      reflectivity: 1,
     });
+  });
+}
 
-    ctx.fillStyle = accentHex;
-    ctx.font = "700 54px Sora, sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(title, size / 2, size / 2 - 18);
+function disposeMaterials(mats) {
+  const list = Array.isArray(mats) ? mats : [mats];
+  list.forEach((m) => {
+    if (m?.map) m.map.dispose();
+    m?.dispose?.();
+  });
+}
 
-    ctx.fillStyle = inkHex;
-    ctx.globalAlpha = 0.72;
-    ctx.font = "600 28px Sora, sans-serif";
-    ctx.fillText(hint, size / 2, size / 2 + 48);
-    ctx.globalAlpha = 1;
-
-    var tex = new THREE.CanvasTexture(c);
-    tex.anisotropy = 4;
-    tex.needsUpdate = true;
-    return tex;
-  }
-
-  function buildCubeMaterials() {
-    var accent = css("--accent", "#e2b13c");
-    var bg = css("--bg-elev", "#181c23");
-    var ink = css("--ink", "#f3f4f6");
-    // BoxGeometry material order: +x -x +y -y +z -z
-    var order = [1, 3, 4, 5, 0, 2]; // map to faces array
-    return order.map(function (idx) {
-      var f = faces[idx];
-      return new THREE.MeshStandardMaterial({
-        map: makeFaceTexture(f.title, f.hint, accent, bg, ink),
-        roughness: 0.35,
-        metalness: 0.45,
-      });
-    });
-  }
-
-  function disposeObject(obj) {
-    if (!obj) return;
-    obj.traverse(function (child) {
-      if (child.geometry) child.geometry.dispose();
-      if (child.material) {
-        var mats = Array.isArray(child.material) ? child.material : [child.material];
-        mats.forEach(function (m) {
-          if (m.map) m.map.dispose();
-          m.dispose();
-        });
-      }
-    });
-  }
-
-  function rebuildMaterials() {
-    if (!cube) return;
-    var old = cube.material;
-    cube.material = buildCubeMaterials();
-    if (Array.isArray(old)) old.forEach(function (m) { if (m.map) m.map.dispose(); m.dispose(); });
-  }
-
-  function syncCaption() {
-    if (!caption) return;
-    var f = faces[faceIndex] || faces[0];
-    caption.innerHTML =
-      '<strong>' + f.title + "</strong><span>" + f.hint + "</span>";
-  }
-
-  function pickFaceFromTime(t) {
-    // cycle captions through production contour every ~1.7s
-    faceIndex = Math.floor(t / 1.7) % faces.length;
-    if (faceIndex !== lastFace) {
-      lastFace = faceIndex;
-      syncCaption();
+function rebuildMaterials() {
+  if (!state.cube) return;
+  const old = state.cube.material;
+  state.cube.material = buildMaterials();
+  disposeMaterials(old);
+  const accent = parseHex(css("--accent", "#e2b13c"), "#e2b13c");
+  if (state.ring?.material) state.ring.material.color.copy(accent);
+  state.satellites.forEach((s) => {
+    if (s.material) {
+      s.material.color.copy(accent);
+      if ("emissive" in s.material) s.material.emissive.copy(accent);
     }
+  });
+  if (state.particles?.material) state.particles.material.color.copy(accent);
+}
+
+function syncCaption() {
+  if (!state.caption) return;
+  const f = state.faces[state.faceIndex] || state.faces[0];
+  state.caption.innerHTML = `<strong>${f.title}</strong><span>${f.hint}</span>`;
+}
+
+function pickFaceFromTime(t) {
+  state.faceIndex = Math.floor(t / 1.75) % state.faces.length;
+  if (state.faceIndex !== state.lastFace) {
+    state.lastFace = state.faceIndex;
+    syncCaption();
   }
+}
 
-  function buildScene() {
-    if (typeof THREE === "undefined") return;
+function buildScene() {
+  const { canvas, stage } = state;
+  const accent = parseHex(css("--accent", "#e2b13c"), "#e2b13c");
+  const dark = isDarkTheme();
 
-    scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-    camera.position.set(0, 0.35, 5.2);
+  state.scene = new THREE.Scene();
+  state.camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+  state.camera.position.set(0, 0.55, 5.4);
 
-    renderer = new THREE.WebGLRenderer({
-      canvas: canvas,
-      antialias: true,
-      alpha: true,
-      powerPreference: "high-performance",
-    });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
+  state.renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true,
+    alpha: true,
+    powerPreference: "high-performance",
+  });
+  state.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  state.renderer.outputColorSpace = THREE.SRGBColorSpace;
+  state.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  state.renderer.toneMappingExposure = dark ? 1.15 : 1.05;
+  state.renderer.shadowMap.enabled = true;
+  state.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-    var accent = hexToThree(css("--accent", "#e2b13c"), "#e2b13c");
-    var ambient = new THREE.AmbientLight(0xffffff, 0.55);
-    scene.add(ambient);
-    var key = new THREE.DirectionalLight(accent, 1.35);
-    key.position.set(3.5, 4.2, 2.8);
-    scene.add(key);
-    var fill = new THREE.DirectionalLight(0xffffff, 0.35);
-    fill.position.set(-3, -1, 2);
-    scene.add(fill);
-    var rim = new THREE.PointLight(accent, 1.1, 12);
-    rim.position.set(-2.2, 1.5, -2);
-    scene.add(rim);
+  const pmrem = new THREE.PMREMGenerator(state.renderer);
+  state.envMap = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  state.scene.environment = state.envMap;
 
-    cube = new THREE.Mesh(new THREE.BoxGeometry(1.55, 1.55, 1.55), buildCubeMaterials());
-    cube.rotation.set(0.35, -0.55, 0.12);
-    scene.add(cube);
+  // lights
+  state.scene.add(new THREE.AmbientLight(0xffffff, dark ? 0.25 : 0.45));
+  const key = new THREE.DirectionalLight(0xffffff, dark ? 1.6 : 1.25);
+  key.position.set(4.2, 6.2, 3.4);
+  key.castShadow = true;
+  key.shadow.mapSize.set(1024, 1024);
+  key.shadow.camera.near = 1;
+  key.shadow.camera.far = 20;
+  key.shadow.radius = 4;
+  state.scene.add(key);
 
-    // glass wireframe shell
-    var shell = new THREE.LineSegments(
-      new THREE.EdgesGeometry(new THREE.BoxGeometry(1.72, 1.72, 1.72)),
-      new THREE.LineBasicMaterial({ color: accent, transparent: true, opacity: 0.45 })
-    );
-    cube.add(shell);
+  const rim = new THREE.SpotLight(accent, dark ? 2.2 : 1.4, 18, Math.PI / 5, 0.4, 1);
+  rim.position.set(-3.5, 3.2, -2.5);
+  rim.castShadow = true;
+  state.scene.add(rim);
 
-    // orbit ring
-    ring = new THREE.Mesh(
-      new THREE.TorusGeometry(2.15, 0.015, 12, 120),
-      new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.35 })
-    );
-    ring.rotation.x = Math.PI / 2.4;
-    scene.add(ring);
+  const fill = new THREE.PointLight(accent, dark ? 0.85 : 0.45, 14);
+  fill.position.set(2.2, -1.2, 3);
+  state.scene.add(fill);
 
-    // satellite cubes
-    satellites = [];
-    for (var i = 0; i < 4; i++) {
-      var sat = new THREE.Mesh(
-        new THREE.BoxGeometry(0.22, 0.22, 0.22),
-        new THREE.MeshStandardMaterial({
-          color: accent,
-          emissive: accent,
-          emissiveIntensity: 0.25,
-          metalness: 0.6,
-          roughness: 0.3,
-          wireframe: i % 2 === 1,
-        })
-      );
-      sat.userData.angle = (i / 4) * Math.PI * 2;
-      sat.userData.radius = 2.05 + (i % 2) * 0.25;
-      sat.userData.speed = 0.35 + i * 0.08;
-      satellites.push(sat);
-      scene.add(sat);
-    }
+  state.group = new THREE.Group();
+  state.scene.add(state.group);
 
-    // floating particles
-    var count = reduced ? 40 : 140;
-    var positions = new Float32Array(count * 3);
-    for (var p = 0; p < count; p++) {
-      positions[p * 3] = (Math.random() - 0.5) * 7;
-      positions[p * 3 + 1] = (Math.random() - 0.5) * 5;
-      positions[p * 3 + 2] = (Math.random() - 0.5) * 5;
-    }
-    var geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    particles = new THREE.Points(
-      geo,
-      new THREE.PointsMaterial({
+  const geo = new RoundedBoxGeometry(1.7, 1.7, 1.7, 6, 0.14);
+  state.cube = new THREE.Mesh(geo, buildMaterials());
+  state.cube.castShadow = true;
+  state.cube.receiveShadow = true;
+  state.cube.rotation.set(0.42, -0.62, 0.1);
+  state.group.add(state.cube);
+
+  // thin chrome frame
+  const frame = new THREE.Mesh(
+    new RoundedBoxGeometry(1.78, 1.78, 1.78, 4, 0.12),
+    new THREE.MeshPhysicalMaterial({
+      color: accent,
+      metalness: 1,
+      roughness: 0.15,
+      transparent: true,
+      opacity: 0.18,
+      clearcoat: 1,
+      side: THREE.BackSide,
+    })
+  );
+  state.cube.add(frame);
+
+  // ground shadow catcher
+  state.floor = new THREE.Mesh(
+    new THREE.CircleGeometry(2.6, 64),
+    new THREE.ShadowMaterial({ opacity: dark ? 0.45 : 0.22 })
+  );
+  state.floor.rotation.x = -Math.PI / 2;
+  state.floor.position.y = -1.35;
+  state.floor.receiveShadow = true;
+  state.group.add(state.floor);
+
+  // reflective disc
+  const disc = new THREE.Mesh(
+    new THREE.CircleGeometry(2.1, 64),
+    new THREE.MeshPhysicalMaterial({
+      color: dark ? 0x0b0d10 : 0xf0f2f4,
+      metalness: 0.9,
+      roughness: 0.15,
+      transparent: true,
+      opacity: dark ? 0.35 : 0.5,
+      envMapIntensity: 1.2,
+    })
+  );
+  disc.rotation.x = -Math.PI / 2;
+  disc.position.y = -1.34;
+  state.group.add(disc);
+
+  // orbit ring
+  state.ring = new THREE.Mesh(
+    new THREE.TorusGeometry(2.25, 0.012, 16, 160),
+    new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.4 })
+  );
+  state.ring.rotation.x = Math.PI / 2.35;
+  state.group.add(state.ring);
+
+  // satellites
+  state.satellites = [];
+  for (let i = 0; i < 5; i++) {
+    const sat = new THREE.Mesh(
+      new RoundedBoxGeometry(0.2, 0.2, 0.2, 2, 0.04),
+      new THREE.MeshPhysicalMaterial({
         color: accent,
-        size: 0.035,
-        transparent: true,
-        opacity: 0.75,
-        sizeAttenuation: true,
+        emissive: accent,
+        emissiveIntensity: 0.35,
+        metalness: 0.9,
+        roughness: 0.2,
+        clearcoat: 1,
       })
     );
-    scene.add(particles);
-
-    syncCaption();
-    onResize();
+    sat.castShadow = true;
+    sat.userData.angle = (i / 5) * Math.PI * 2;
+    sat.userData.radius = 2.15 + (i % 2) * 0.22;
+    sat.userData.speed = 0.32 + i * 0.05;
+    state.satellites.push(sat);
+    state.group.add(sat);
   }
 
-  function onResize() {
-    if (!stage || !renderer || !camera) return;
-    var rect = stage.getBoundingClientRect();
-    var w = Math.max(280, Math.floor(rect.width));
-    var h = Math.max(280, Math.floor(rect.height));
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
+  // dust particles
+  const count = state.reduced ? 60 : 220;
+  const positions = new Float32Array(count * 3);
+  for (let p = 0; p < count; p++) {
+    positions[p * 3] = (Math.random() - 0.5) * 8;
+    positions[p * 3 + 1] = (Math.random() - 0.5) * 5;
+    positions[p * 3 + 2] = (Math.random() - 0.5) * 6;
   }
+  const pgeo = new THREE.BufferGeometry();
+  pgeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  state.particles = new THREE.Points(
+    pgeo,
+    new THREE.PointsMaterial({
+      color: accent,
+      size: 0.028,
+      transparent: true,
+      opacity: 0.7,
+      depthWrite: false,
+      sizeAttenuation: true,
+    })
+  );
+  state.scene.add(state.particles);
 
-  function animate(ts) {
-    if (!renderer || !scene || !camera) return;
-    if (!clockStart) clockStart = ts;
-    var t = (ts - clockStart) / 1000;
+  // bloom composer
+  const size = new THREE.Vector2(stage.clientWidth || 500, stage.clientHeight || 500);
+  state.composer = new EffectComposer(state.renderer);
+  state.composer.addPass(new RenderPass(state.scene, state.camera));
+  const bloom = new UnrealBloomPass(size, dark ? 0.45 : 0.28, 0.7, 0.85);
+  state.composer.addPass(bloom);
 
-    if (!reduced && cube) {
-      cube.rotation.y += 0.0045;
-      cube.rotation.x += 0.0012;
-      cube.rotation.x += (targetTilt.x - cube.rotation.x * 0) * 0.002;
-      cube.rotation.y += targetTilt.y * 0.0008;
-      // gentle mouse follow on group tilt via camera look
-      camera.position.x += (pointer.x * 0.55 - camera.position.x) * 0.04;
-      camera.position.y += (0.35 + pointer.y * 0.35 - camera.position.y) * 0.04;
-      camera.lookAt(0, 0, 0);
+  syncCaption();
+  onResize();
+}
 
-      ring.rotation.z = t * 0.25;
-      ring.rotation.x = Math.PI / 2.4 + Math.sin(t * 0.4) * 0.08;
+function onResize() {
+  if (!state.stage || !state.renderer || !state.camera) return;
+  const rect = state.stage.getBoundingClientRect();
+  const w = Math.max(280, Math.floor(rect.width));
+  const h = Math.max(280, Math.floor(rect.height));
+  state.renderer.setSize(w, h, false);
+  state.composer?.setSize(w, h);
+  state.camera.aspect = w / h;
+  state.camera.updateProjectionMatrix();
+}
 
-      satellites.forEach(function (sat) {
-        sat.userData.angle += sat.userData.speed * 0.01;
-        sat.position.x = Math.cos(sat.userData.angle) * sat.userData.radius;
-        sat.position.z = Math.sin(sat.userData.angle) * sat.userData.radius;
-        sat.position.y = Math.sin(sat.userData.angle * 2 + t) * 0.35;
-        sat.rotation.x += 0.02;
-        sat.rotation.y += 0.03;
-      });
+function animate(ts) {
+  if (!state.composer) return;
+  if (!state.clockStart) state.clockStart = ts;
+  const t = (ts - state.clockStart) / 1000;
 
-      if (particles) {
-        particles.rotation.y = t * 0.05;
-        particles.rotation.x = Math.sin(t * 0.2) * 0.08;
-      }
+  if (!state.reduced && state.cube) {
+    state.cube.rotation.y += 0.0038;
+    state.cube.rotation.x += 0.0009;
 
-      pickFaceFromTime(t);
-    } else {
-      pickFaceFromTime(0);
+    state.camera.position.x += (state.pointer.x * 0.7 - state.camera.position.x) * 0.045;
+    state.camera.position.y += (0.55 + state.pointer.y * 0.4 - state.camera.position.y) * 0.045;
+    state.camera.lookAt(0, -0.1, 0);
+
+    if (state.ring) {
+      state.ring.rotation.z = t * 0.22;
+      state.ring.rotation.x = Math.PI / 2.35 + Math.sin(t * 0.35) * 0.06;
     }
 
-    renderer.render(scene, camera);
-    raf = requestAnimationFrame(animate);
-  }
+    state.satellites.forEach((sat) => {
+      sat.userData.angle += sat.userData.speed * 0.01;
+      sat.position.x = Math.cos(sat.userData.angle) * sat.userData.radius;
+      sat.position.z = Math.sin(sat.userData.angle) * sat.userData.radius;
+      sat.position.y = Math.sin(sat.userData.angle * 1.8 + t) * 0.42;
+      sat.rotation.x += 0.025;
+      sat.rotation.y += 0.03;
+    });
 
-  function onPointer(e) {
-    if (!stage) return;
-    var rect = stage.getBoundingClientRect();
-    var nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    var ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-    pointer.x = Math.max(-1, Math.min(1, nx));
-    pointer.y = Math.max(-1, Math.min(1, -ny));
-    targetTilt.x = pointer.y * 0.25;
-    targetTilt.y = pointer.x * 0.45;
-  }
-
-  function start() {
-    stage = document.getElementById("hero-stage");
-    canvas = document.getElementById("hero-canvas");
-    caption = document.getElementById("hero-face-caption");
-    if (!stage || !canvas) return;
-    if (typeof THREE === "undefined") {
-      stage.classList.add("is-fallback");
-      return;
+    if (state.particles) {
+      state.particles.rotation.y = t * 0.04;
     }
 
-    reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    buildScene();
-    if (raf) cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(animate);
-
-    window.addEventListener("resize", onResize);
-    stage.addEventListener("pointermove", onPointer);
-    stage.addEventListener("pointerleave", function () {
-      pointer.x = 0;
-      pointer.y = 0;
-    });
-
-    var mo = new MutationObserver(function () {
-      rebuildMaterials();
-      if (ring && ring.material) ring.material.color = hexToThree(css("--accent", "#e2b13c"), "#e2b13c");
-    });
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  }
-
-  window.GooruContour = {
-    setLabels: function (payload) {
-      if (!payload || !payload.nodes || payload.nodes.length < 5) return;
-      faces = [
-        payload.nodes[0],
-        payload.nodes[1],
-        payload.nodes[2],
-        payload.nodes[3],
-        payload.nodes[4],
-        { title: "gooru", hint: payload.nodes[0].hint ? "Full production contour" : "gooru" },
-      ].map(function (n) {
-        return { title: n.label || n.title, hint: n.hint };
-      });
-      rebuildMaterials();
-      syncCaption();
-    },
-    restart: function () {
-      rebuildMaterials();
-    },
-  };
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start);
+    // subtle float
+    state.group.position.y = Math.sin(t * 0.9) * 0.06;
+    pickFaceFromTime(t);
   } else {
-    start();
+    pickFaceFromTime(0);
   }
-})();
+
+  state.composer.render();
+  state.raf = requestAnimationFrame(animate);
+}
+
+function onPointer(e) {
+  const rect = state.stage.getBoundingClientRect();
+  const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+  state.pointer.x = Math.max(-1, Math.min(1, nx));
+  state.pointer.y = Math.max(-1, Math.min(1, -ny));
+}
+
+function start() {
+  state.stage = document.getElementById("hero-stage");
+  state.canvas = document.getElementById("hero-canvas");
+  state.caption = document.getElementById("hero-face-caption");
+  if (!state.stage || !state.canvas) return;
+
+  state.reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  buildScene();
+  if (state.raf) cancelAnimationFrame(state.raf);
+  state.raf = requestAnimationFrame(animate);
+
+  window.addEventListener("resize", onResize);
+  state.stage.addEventListener("pointermove", onPointer);
+  state.stage.addEventListener("pointerleave", () => {
+    state.pointer.x = 0;
+    state.pointer.y = 0;
+  });
+
+  new MutationObserver(() => {
+    const dark = isDarkTheme();
+    if (state.renderer) state.renderer.toneMappingExposure = dark ? 1.15 : 1.05;
+    rebuildMaterials();
+  }).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
+}
+
+window.GooruContour = {
+  setLabels(payload) {
+    if (!payload?.nodes || payload.nodes.length < 5) return;
+    state.faces = [
+      ...payload.nodes.slice(0, 5).map((n) => ({ title: n.label, hint: n.hint })),
+      { title: "gooru", hint: "Full production contour" },
+    ];
+    rebuildMaterials();
+    syncCaption();
+  },
+  restart() {
+    rebuildMaterials();
+  },
+};
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", start);
+} else {
+  start();
+}
