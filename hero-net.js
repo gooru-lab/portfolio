@@ -20,13 +20,15 @@
   var lastActive = -1;
   var reduced = false;
   var canHover = false;
+  var narrow = false;
   var pointer = { x: 0, y: 0, on: false };
   var raf = 0;
   var visible = true;
   var t0 = 0;
-  var accent = "#5eead4";
-  var muted = "#94a3b8";
-  var ink = "#e2e8f0";
+  var accent = "#e2b13c";
+  var muted = "#9ca3af";
+  var ink = "#f3f4f6";
+  var bg = "#0b0d10";
 
   function cssVar(name, fallback) {
     var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -34,19 +36,31 @@
   }
 
   function refreshTheme() {
-    accent = cssVar("--accent", "#5eead4");
-    muted = cssVar("--muted", "#94a3b8");
-    ink = cssVar("--text", "#e2e8f0");
+    accent = cssVar("--accent", "#e2b13c");
+    muted = cssVar("--muted", "#9ca3af");
+    ink = cssVar("--ink", "#f3f4f6");
+    bg = cssVar("--bg", "#0b0d10");
   }
 
   function layoutHubs() {
-    hubs = [
-      { id: 0, nx: 0.14, ny: 0.42, r: 15 },
-      { id: 1, nx: 0.34, ny: 0.22, r: 14 },
-      { id: 2, nx: 0.52, ny: 0.46, r: 18 },
-      { id: 3, nx: 0.72, ny: 0.24, r: 14 },
-      { id: 4, nx: 0.86, ny: 0.48, r: 14 },
-    ];
+    // Keep constellation on the right so copy stays readable.
+    var layout = narrow
+      ? [
+          { id: 0, nx: 0.18, ny: 0.62, r: 12 },
+          { id: 1, nx: 0.38, ny: 0.48, r: 11 },
+          { id: 2, nx: 0.55, ny: 0.68, r: 14 },
+          { id: 3, nx: 0.74, ny: 0.5, r: 11 },
+          { id: 4, nx: 0.9, ny: 0.66, r: 11 },
+        ]
+      : [
+          { id: 0, nx: 0.48, ny: 0.42, r: 14 },
+          { id: 1, nx: 0.6, ny: 0.24, r: 13 },
+          { id: 2, nx: 0.72, ny: 0.48, r: 17 },
+          { id: 3, nx: 0.84, ny: 0.28, r: 13 },
+          { id: 4, nx: 0.93, ny: 0.52, r: 13 },
+        ];
+
+    hubs = layout;
     hubs.forEach(function (n) {
       n.x = n.nx * w;
       n.y = n.ny * h;
@@ -66,15 +80,16 @@
   }
 
   function spawnDust() {
-    var count = Math.min(42, Math.max(22, Math.floor((w * h) / 9000)));
+    var count = Math.min(36, Math.max(18, Math.floor((w * h) / 14000)));
     dust = [];
     for (var i = 0; i < count; i++) {
+      var bias = narrow ? 0.15 + Math.random() * 0.8 : 0.42 + Math.random() * 0.55;
       dust.push({
-        x: Math.random() * w,
+        x: bias * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.18,
-        vy: (Math.random() - 0.5) * 0.18,
-        r: 1.2 + Math.random() * 1.8,
+        vx: (Math.random() - 0.5) * 0.16,
+        vy: (Math.random() - 0.5) * 0.16,
+        r: 1.1 + Math.random() * 1.6,
         phase: Math.random() * Math.PI * 2,
       });
     }
@@ -86,7 +101,7 @@
         a: pair[0],
         b: pair[1],
         t: (i * 0.17) % 1,
-        speed: 0.18 + (i % 3) * 0.04,
+        speed: 0.16 + (i % 3) * 0.035,
       };
     });
   }
@@ -96,6 +111,7 @@
     var rect = stage.getBoundingClientRect();
     w = Math.max(1, Math.floor(rect.width));
     h = Math.max(1, Math.floor(rect.height));
+    narrow = window.matchMedia("(max-width: 900px)").matches;
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.floor(w * dpr);
     canvas.height = Math.floor(h * dpr);
@@ -130,7 +146,7 @@
     ctx.quadraticCurveTo(mx, my, b.x, b.y);
     ctx.strokeStyle = accent;
     ctx.globalAlpha = alpha;
-    ctx.lineWidth = 1.15;
+    ctx.lineWidth = 1.1;
     ctx.stroke();
     ctx.globalAlpha = 1;
   }
@@ -149,32 +165,34 @@
     var lab = labels[i] || labels[0];
     var isOn = i === active;
     var pulse = 1 + Math.sin(t * 2.2 + n.phase) * 0.04;
-    var r = n.r * pulse * (isOn ? 1.12 : 1);
+    var r = n.r * pulse * (isOn ? 1.1 : 1);
 
     if (isOn) {
-      var g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 3.2);
+      var g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 3.4);
       g.addColorStop(0, accent);
       g.addColorStop(1, "transparent");
-      ctx.globalAlpha = 0.22;
+      ctx.globalAlpha = 0.18;
       ctx.fillStyle = g;
       ctx.beginPath();
-      ctx.arc(n.x, n.y, r * 3.2, 0, Math.PI * 2);
+      ctx.arc(n.x, n.y, r * 3.4, 0, Math.PI * 2);
       ctx.fill();
       ctx.globalAlpha = 1;
     }
 
     ctx.beginPath();
     ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-    ctx.fillStyle = isOn ? accent : "rgba(15, 23, 42, 0.55)";
+    ctx.fillStyle = isOn ? accent : bg;
+    ctx.globalAlpha = isOn ? 0.95 : 0.55;
     ctx.fill();
-    ctx.lineWidth = isOn ? 2 : 1.2;
+    ctx.globalAlpha = 1;
+    ctx.lineWidth = isOn ? 2 : 1.15;
     ctx.strokeStyle = accent;
-    ctx.globalAlpha = isOn ? 1 : 0.7;
+    ctx.globalAlpha = isOn ? 1 : 0.55;
     ctx.stroke();
     ctx.globalAlpha = 1;
 
     ctx.beginPath();
-    ctx.arc(n.x, n.y, 3.2, 0, Math.PI * 2);
+    ctx.arc(n.x, n.y, 2.8, 0, Math.PI * 2);
     ctx.fillStyle = isOn ? ink : accent;
     ctx.fill();
 
@@ -182,7 +200,7 @@
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
     ctx.fillStyle = isOn ? accent : ink;
-    ctx.globalAlpha = isOn ? 1 : 0.88;
+    ctx.globalAlpha = isOn ? 0.95 : 0.72;
     ctx.fillText(lab.title, n.x, n.y + r + 8);
     ctx.globalAlpha = 1;
   }
@@ -199,33 +217,42 @@
 
     ctx.clearRect(0, 0, w, h);
 
-    // soft vignette core
-    var vg = ctx.createRadialGradient(w * 0.52, h * 0.46, 20, w * 0.52, h * 0.46, Math.max(w, h) * 0.55);
-    vg.addColorStop(0, "rgba(94, 234, 212, 0.06)");
+    var vg = ctx.createRadialGradient(
+      w * (narrow ? 0.55 : 0.72),
+      h * 0.45,
+      20,
+      w * (narrow ? 0.55 : 0.72),
+      h * 0.45,
+      Math.max(w, h) * 0.5
+    );
+    vg.addColorStop(0, accent);
     vg.addColorStop(1, "transparent");
+    ctx.globalAlpha = 0.05;
     ctx.fillStyle = vg;
     ctx.fillRect(0, 0, w, h);
+    ctx.globalAlpha = 1;
 
-    // dust + neighbor links
-    var connectDist = Math.min(110, w * 0.22);
+    var connectDist = Math.min(100, w * 0.18);
+    var minX = narrow ? 0 : w * 0.38;
     for (var i = 0; i < dust.length; i++) {
       var p = dust[i];
       if (!reduced) {
         p.x += p.vx;
         p.y += p.vy;
-        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.x < minX || p.x > w) p.vx *= -1;
         if (p.y < 0 || p.y > h) p.vy *= -1;
+        p.x = Math.max(minX, Math.min(w, p.x));
         if (canHover && pointer.on) {
           var dx = pointer.x - p.x;
           var dy = pointer.y - p.y;
           var d2 = dx * dx + dy * dy;
-          if (d2 < 140 * 140 && d2 > 1) {
-            p.vx += dx * 0.000035;
-            p.vy += dy * 0.000035;
+          if (d2 < 130 * 130 && d2 > 1) {
+            p.vx += dx * 0.00003;
+            p.vy += dy * 0.00003;
           }
         }
         var sp = Math.hypot(p.vx, p.vy);
-        if (sp > 0.35) {
+        if (sp > 0.32) {
           p.vx *= 0.92;
           p.vy *= 0.92;
         }
@@ -240,7 +267,7 @@
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(q.x, q.y);
           ctx.strokeStyle = accent;
-          ctx.globalAlpha = (1 - dd / connectDist) * 0.12;
+          ctx.globalAlpha = (1 - dd / connectDist) * 0.1;
           ctx.lineWidth = 1;
           ctx.stroke();
           ctx.globalAlpha = 1;
@@ -249,21 +276,19 @@
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fillStyle = accent;
-      ctx.globalAlpha = 0.28 + Math.sin(t + p.phase) * 0.08;
+      ctx.globalAlpha = 0.22 + Math.sin(t + p.phase) * 0.07;
       ctx.fill();
       ctx.globalAlpha = 1;
     }
 
-    // main contour edges
     for (var li = 0; li < links.length; li++) {
       var pair = links[li];
       var a = hubs[pair[0]];
       var b = hubs[pair[1]];
       var hot = pair[0] === active || pair[1] === active;
-      drawLink(a, b, hot ? 0.55 : 0.22);
+      drawLink(a, b, hot ? 0.48 : 0.18);
     }
 
-    // packets
     if (!reduced) {
       for (var pi = 0; pi < pulses.length; pi++) {
         var pul = pulses[pi];
@@ -273,21 +298,20 @@
         var pb = hubs[pul.b];
         var pt = pointOnLink(pa, pb, pul.t);
         ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 2.6, 0, Math.PI * 2);
+        ctx.arc(pt.x, pt.y, 2.4, 0, Math.PI * 2);
         ctx.fillStyle = accent;
         ctx.shadowColor = accent;
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 8;
         ctx.fill();
         ctx.shadowBlur = 0;
       }
     }
 
-    // hubs drift slightly
     for (var hi = 0; hi < hubs.length; hi++) {
       var hub = hubs[hi];
       if (!reduced) {
-        hub.x = hub.ox + Math.sin(t * 0.7 + hub.phase) * 3.5;
-        hub.y = hub.oy + Math.cos(t * 0.55 + hub.phase) * 2.5;
+        hub.x = hub.ox + Math.sin(t * 0.7 + hub.phase) * 3.2;
+        hub.y = hub.oy + Math.cos(t * 0.55 + hub.phase) * 2.2;
       } else {
         hub.x = hub.ox;
         hub.y = hub.oy;
@@ -327,8 +351,10 @@
 
     window.addEventListener("resize", resize);
     if (canHover) {
-      canvas.addEventListener("pointermove", onPointer);
-      canvas.addEventListener("pointerleave", function () {
+      // Pointer on the whole hero — stage has pointer-events none, canvas catches right side.
+      var hero = stage.closest(".hero") || stage;
+      hero.addEventListener("pointermove", onPointer);
+      hero.addEventListener("pointerleave", function () {
         pointer.on = false;
       });
     }
