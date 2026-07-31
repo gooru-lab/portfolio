@@ -6,8 +6,10 @@
   var w = 0;
   var h = 0;
   var hubs = [];
+  var satellites = [];
   var dust = [];
   var links = [];
+  var satLinks = [];
   var pulses = [];
   var labels = [
     { title: "POS", hint: "POS · 1C" },
@@ -26,9 +28,8 @@
   var visible = true;
   var t0 = 0;
   var accent = "#e2b13c";
-  var muted = "#9ca3af";
-  var ink = "#f3f4f6";
-  var bg = "#0b0d10";
+  var ink = "#f7f8f8";
+  var bg = "#010102";
 
   function cssVar(name, fallback) {
     var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -37,27 +38,25 @@
 
   function refreshTheme() {
     accent = cssVar("--accent", "#e2b13c");
-    muted = cssVar("--muted", "#9ca3af");
-    ink = cssVar("--ink", "#f3f4f6");
-    bg = cssVar("--bg", "#0b0d10");
+    ink = cssVar("--ink", "#f7f8f8");
+    bg = cssVar("--bg", "#010102");
   }
 
   function layoutHubs() {
-    // Keep constellation on the right so copy stays readable.
     var layout = narrow
       ? [
-          { id: 0, nx: 0.18, ny: 0.62, r: 12 },
-          { id: 1, nx: 0.38, ny: 0.48, r: 11 },
-          { id: 2, nx: 0.55, ny: 0.68, r: 14 },
-          { id: 3, nx: 0.74, ny: 0.5, r: 11 },
-          { id: 4, nx: 0.9, ny: 0.66, r: 11 },
+          { id: 0, nx: 0.16, ny: 0.58, r: 11 },
+          { id: 1, nx: 0.36, ny: 0.42, r: 10 },
+          { id: 2, nx: 0.54, ny: 0.66, r: 13 },
+          { id: 3, nx: 0.74, ny: 0.44, r: 10 },
+          { id: 4, nx: 0.9, ny: 0.62, r: 10 },
         ]
       : [
-          { id: 0, nx: 0.48, ny: 0.42, r: 14 },
-          { id: 1, nx: 0.6, ny: 0.24, r: 13 },
-          { id: 2, nx: 0.72, ny: 0.48, r: 17 },
-          { id: 3, nx: 0.84, ny: 0.28, r: 13 },
-          { id: 4, nx: 0.93, ny: 0.52, r: 13 },
+          { id: 0, nx: 0.46, ny: 0.4, r: 13 },
+          { id: 1, nx: 0.58, ny: 0.22, r: 12 },
+          { id: 2, nx: 0.7, ny: 0.48, r: 16 },
+          { id: 3, nx: 0.82, ny: 0.26, r: 12 },
+          { id: 4, nx: 0.93, ny: 0.52, r: 12 },
         ];
 
     hubs = layout;
@@ -76,34 +75,70 @@
       [3, 4],
       [0, 2],
       [2, 4],
+      [1, 3],
     ];
+
+    // unlabeled satellite nodes around the constellation
+    satellites = [];
+    satLinks = [];
+    var satCount = narrow ? 14 : 26;
+    for (var i = 0; i < satCount; i++) {
+      var anchor = hubs[i % hubs.length];
+      var ang = (i / satCount) * Math.PI * 2 + (i % 3) * 0.4;
+      var dist = (narrow ? 42 : 55) + (i % 5) * 14;
+      var sx = anchor.ox + Math.cos(ang) * dist;
+      var sy = anchor.oy + Math.sin(ang) * dist * 0.72;
+      if (!narrow && sx < w * 0.4) sx = w * 0.4 + Math.random() * 40;
+      satellites.push({
+        x: sx,
+        y: sy,
+        ox: sx,
+        oy: sy,
+        r: 2.2 + (i % 3) * 0.7,
+        phase: Math.random() * Math.PI * 2,
+        hub: i % hubs.length,
+      });
+      satLinks.push(i);
+    }
   }
 
   function spawnDust() {
-    var count = Math.min(36, Math.max(18, Math.floor((w * h) / 14000)));
+    var count = Math.min(120, Math.max(55, Math.floor((w * h) / 5500)));
     dust = [];
+    var minX = narrow ? 0.08 : 0.38;
     for (var i = 0; i < count; i++) {
-      var bias = narrow ? 0.15 + Math.random() * 0.8 : 0.42 + Math.random() * 0.55;
       dust.push({
-        x: bias * w,
+        x: (minX + Math.random() * (1 - minX)) * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.16,
-        vy: (Math.random() - 0.5) * 0.16,
-        r: 1.1 + Math.random() * 1.6,
+        vx: (Math.random() - 0.5) * 0.22,
+        vy: (Math.random() - 0.5) * 0.22,
+        r: 0.8 + Math.random() * 1.9,
         phase: Math.random() * Math.PI * 2,
+        bright: Math.random(),
       });
     }
   }
 
   function spawnPulses() {
-    pulses = links.map(function (pair, i) {
-      return {
-        a: pair[0],
-        b: pair[1],
-        t: (i * 0.17) % 1,
-        speed: 0.16 + (i % 3) * 0.035,
-      };
-    });
+    pulses = [];
+    for (var i = 0; i < links.length; i++) {
+      pulses.push({
+        a: links[i][0],
+        b: links[i][1],
+        t: (i * 0.13) % 1,
+        speed: 0.14 + (i % 4) * 0.03,
+        hub: true,
+      });
+    }
+    // extra packets on some satellite spokes
+    for (var s = 0; s < satellites.length; s += 2) {
+      pulses.push({
+        sat: s,
+        t: Math.random(),
+        speed: 0.1 + (s % 3) * 0.025,
+        hub: false,
+      });
+    }
   }
 
   function resize() {
@@ -138,7 +173,7 @@
     }
   }
 
-  function drawLink(a, b, alpha) {
+  function drawLink(a, b, alpha, width) {
     var mx = (a.x + b.x) / 2;
     var my = (a.y + b.y) / 2 + Math.sin((a.x + b.x) * 0.01) * 10;
     ctx.beginPath();
@@ -146,7 +181,7 @@
     ctx.quadraticCurveTo(mx, my, b.x, b.y);
     ctx.strokeStyle = accent;
     ctx.globalAlpha = alpha;
-    ctx.lineWidth = 1.1;
+    ctx.lineWidth = width || 1.1;
     ctx.stroke();
     ctx.globalAlpha = 1;
   }
@@ -168,13 +203,13 @@
     var r = n.r * pulse * (isOn ? 1.1 : 1);
 
     if (isOn) {
-      var g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 3.4);
+      var g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 3.6);
       g.addColorStop(0, accent);
       g.addColorStop(1, "transparent");
-      ctx.globalAlpha = 0.18;
+      ctx.globalAlpha = 0.16;
       ctx.fillStyle = g;
       ctx.beginPath();
-      ctx.arc(n.x, n.y, r * 3.4, 0, Math.PI * 2);
+      ctx.arc(n.x, n.y, r * 3.6, 0, Math.PI * 2);
       ctx.fill();
       ctx.globalAlpha = 1;
     }
@@ -192,15 +227,15 @@
     ctx.globalAlpha = 1;
 
     ctx.beginPath();
-    ctx.arc(n.x, n.y, 2.8, 0, Math.PI * 2);
+    ctx.arc(n.x, n.y, 2.6, 0, Math.PI * 2);
     ctx.fillStyle = isOn ? ink : accent;
     ctx.fill();
 
-    ctx.font = "600 12px Sora, system-ui, sans-serif";
+    ctx.font = "500 12px Sora, system-ui, sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
     ctx.fillStyle = isOn ? accent : ink;
-    ctx.globalAlpha = isOn ? 0.95 : 0.72;
+    ctx.globalAlpha = isOn ? 0.95 : 0.7;
     ctx.fillText(lab.title, n.x, n.y + r + 8);
     ctx.globalAlpha = 1;
   }
@@ -218,22 +253,22 @@
     ctx.clearRect(0, 0, w, h);
 
     var vg = ctx.createRadialGradient(
-      w * (narrow ? 0.55 : 0.72),
+      w * (narrow ? 0.55 : 0.74),
       h * 0.45,
-      20,
-      w * (narrow ? 0.55 : 0.72),
+      10,
+      w * (narrow ? 0.55 : 0.74),
       h * 0.45,
-      Math.max(w, h) * 0.5
+      Math.max(w, h) * 0.52
     );
     vg.addColorStop(0, accent);
     vg.addColorStop(1, "transparent");
-    ctx.globalAlpha = 0.05;
+    ctx.globalAlpha = 0.045;
     ctx.fillStyle = vg;
     ctx.fillRect(0, 0, w, h);
     ctx.globalAlpha = 1;
 
-    var connectDist = Math.min(100, w * 0.18);
-    var minX = narrow ? 0 : w * 0.38;
+    var connectDist = Math.min(118, w * 0.2);
+    var minX = narrow ? 0 : w * 0.36;
     for (var i = 0; i < dust.length; i++) {
       var p = dust[i];
       if (!reduced) {
@@ -246,17 +281,18 @@
           var dx = pointer.x - p.x;
           var dy = pointer.y - p.y;
           var d2 = dx * dx + dy * dy;
-          if (d2 < 130 * 130 && d2 > 1) {
-            p.vx += dx * 0.00003;
-            p.vy += dy * 0.00003;
+          if (d2 < 150 * 150 && d2 > 1) {
+            p.vx += dx * 0.000028;
+            p.vy += dy * 0.000028;
           }
         }
         var sp = Math.hypot(p.vx, p.vy);
-        if (sp > 0.32) {
-          p.vx *= 0.92;
-          p.vy *= 0.92;
+        if (sp > 0.38) {
+          p.vx *= 0.9;
+          p.vy *= 0.9;
         }
       }
+      // neighbor links — denser mesh
       for (var j = i + 1; j < dust.length; j++) {
         var q = dust[j];
         var ddx = p.x - q.x;
@@ -267,8 +303,8 @@
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(q.x, q.y);
           ctx.strokeStyle = accent;
-          ctx.globalAlpha = (1 - dd / connectDist) * 0.1;
-          ctx.lineWidth = 1;
+          ctx.globalAlpha = (1 - dd / connectDist) * (0.08 + p.bright * 0.06);
+          ctx.lineWidth = 0.9;
           ctx.stroke();
           ctx.globalAlpha = 1;
         }
@@ -276,7 +312,32 @@
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fillStyle = accent;
-      ctx.globalAlpha = 0.22 + Math.sin(t + p.phase) * 0.07;
+      ctx.globalAlpha = 0.18 + Math.sin(t * 1.4 + p.phase) * 0.08 + p.bright * 0.08;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    // satellite spokes + nodes
+    for (var si = 0; si < satellites.length; si++) {
+      var sat = satellites[si];
+      var hub = hubs[sat.hub];
+      if (!reduced) {
+        sat.x = sat.ox + Math.sin(t * 0.8 + sat.phase) * 4;
+        sat.y = sat.oy + Math.cos(t * 0.65 + sat.phase) * 3;
+      }
+      ctx.beginPath();
+      ctx.moveTo(hub.x, hub.y);
+      ctx.lineTo(sat.x, sat.y);
+      ctx.strokeStyle = accent;
+      ctx.globalAlpha = sat.hub === active ? 0.22 : 0.08;
+      ctx.lineWidth = 0.9;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+
+      ctx.beginPath();
+      ctx.arc(sat.x, sat.y, sat.r, 0, Math.PI * 2);
+      ctx.fillStyle = accent;
+      ctx.globalAlpha = sat.hub === active ? 0.55 : 0.28;
       ctx.fill();
       ctx.globalAlpha = 1;
     }
@@ -286,7 +347,7 @@
       var a = hubs[pair[0]];
       var b = hubs[pair[1]];
       var hot = pair[0] === active || pair[1] === active;
-      drawLink(a, b, hot ? 0.48 : 0.18);
+      drawLink(a, b, hot ? 0.5 : 0.16, hot ? 1.25 : 1);
     }
 
     if (!reduced) {
@@ -294,29 +355,37 @@
         var pul = pulses[pi];
         pul.t += pul.speed * 0.016;
         if (pul.t > 1) pul.t -= 1;
-        var pa = hubs[pul.a];
-        var pb = hubs[pul.b];
-        var pt = pointOnLink(pa, pb, pul.t);
+        var pt;
+        if (pul.hub) {
+          pt = pointOnLink(hubs[pul.a], hubs[pul.b], pul.t);
+        } else {
+          var sN = satellites[pul.sat];
+          var hN = hubs[sN.hub];
+          pt = {
+            x: hN.x + (sN.x - hN.x) * pul.t,
+            y: hN.y + (sN.y - hN.y) * pul.t,
+          };
+        }
         ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 2.4, 0, Math.PI * 2);
+        ctx.arc(pt.x, pt.y, pul.hub ? 2.3 : 1.6, 0, Math.PI * 2);
         ctx.fillStyle = accent;
         ctx.shadowColor = accent;
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = pul.hub ? 8 : 5;
         ctx.fill();
         ctx.shadowBlur = 0;
       }
     }
 
     for (var hi = 0; hi < hubs.length; hi++) {
-      var hub = hubs[hi];
+      var hubN = hubs[hi];
       if (!reduced) {
-        hub.x = hub.ox + Math.sin(t * 0.7 + hub.phase) * 3.2;
-        hub.y = hub.oy + Math.cos(t * 0.55 + hub.phase) * 2.2;
+        hubN.x = hubN.ox + Math.sin(t * 0.7 + hubN.phase) * 3.2;
+        hubN.y = hubN.oy + Math.cos(t * 0.55 + hubN.phase) * 2.2;
       } else {
-        hub.x = hub.ox;
-        hub.y = hub.oy;
+        hubN.x = hubN.ox;
+        hubN.y = hubN.oy;
       }
-      drawHub(hub, hi, t);
+      drawHub(hubN, hi, t);
     }
 
     raf = requestAnimationFrame(frame);
@@ -351,7 +420,6 @@
 
     window.addEventListener("resize", resize);
     if (canHover) {
-      // Pointer on the whole hero — stage has pointer-events none, canvas catches right side.
       var hero = stage.closest(".hero") || stage;
       hero.addEventListener("pointermove", onPointer);
       hero.addEventListener("pointerleave", function () {

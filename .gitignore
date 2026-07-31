@@ -4,3 +4,6 @@ Thumbs.db
 __pycache__/
 .vscode/
 .idea/
+
+_design-md-tmp/
+

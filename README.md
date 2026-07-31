@@ -37,3 +37,7 @@ Split-layout: текст зліва, справа легкий CSS 3D-куб (`h
 ## Деплой
 
 Push у `main` → GitHub Pages (branch `main`, root).
+
+## Design system
+
+Visual language adapted from [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md) linear.app tokens → gooru amber accent. See DESIGN.md.
