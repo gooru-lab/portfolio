@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="gooru — DevOps, Full-Stack і production AI для retail: боти, OpenAI/OCR, ERP, BI, інфраструктура.">
+  <meta name="description" content="gooru — DevOps, Full-Stack, production AI для retail і market systems: боти, OpenAI/OCR, ERP, BI, Polymarket engines.">
   <meta name="theme-color" content="#0b0d10">
   <title>gooru — Portfolio</title>
   <link rel="canonical" href="https://gooru-lab.github.io/portfolio/">
@@ -32,9 +32,9 @@
 
         <section class="hero hero--split">
       <div class="hero-copy">
-        <p class="hero-kicker" data-i18n="kicker">DevOps &amp; Full-Stack · AI for retail</p>
+        <p class="hero-kicker" data-i18n="kicker">DevOps &amp; Full-Stack · AI · market systems</p>
         <h1>gooru</h1>
-        <p class="hero-lead" data-i18n="lead">Повний контур production для retail: каса → API / бот → Docker → адмінка → моніторинг. Будую AI у проді на реальних даних — без «вигадок» моделі.</p>
+        <p class="hero-lead" data-i18n="lead">Повний контур production для retail: каса → API / бот → Docker → адмінка → моніторинг. Паралельно — market engines (sniper / copy-trading) з paper-first і ризик-гейтами. AI лише на реальних даних.</p>
         <div class="cta-row">
           <a class="btn btn-primary" href="mailto:sergey.petrenko7733@gmail.com" data-i18n="ctaWrite">Написати</a>
           <a class="btn btn-ghost" href="https://github.com/gooru-lab" target="_blank" rel="noopener">GitHub</a>
@@ -205,6 +205,34 @@
           </figure>
         </div>
       </article>
+
+<article class="case">
+        <div class="case-head">
+          <h3 data-i18n="case8Title">Polymarket BTC Sniper (5m)</h3>
+          <div class="case-tags">
+            <span class="tag">Python</span>
+            <span class="tag">CLOB API</span>
+            <span class="tag">paper-first</span>
+            <span class="tag">Docker</span>
+          </div>
+        </div>
+        <p class="problem" data-i18n="case8P1" data-i18n-html="1"><strong>Задача:</strong> низьколатентний sniper для BTC 5m Up/Down на Polymarket — спочатку paper, live лише після жорстких метрик готовності.</p>
+        <p data-i18n="case8P2" data-i18n-html="1"><strong>Зробив:</strong> окремий engine (`scalper`): стратегія й сигнали, paper ledger, live-gate (кількість угод / WR / t-stat / PnL), headless 24/7 на Hetzner, dashboard `/sniper`, CI-тести, безпечний режим без live за замовчуванням.</p>
+      </article>
+
+<article class="case">
+        <div class="case-head">
+          <h3 data-i18n="case9Title">Polymarket copy-trading</h3>
+          <div class="case-tags">
+            <span class="tag">Python</span>
+            <span class="tag">FastAPI</span>
+            <span class="tag">SQLite</span>
+            <span class="tag">risk limits</span>
+          </div>
+        </div>
+        <p class="problem" data-i18n="case9P1" data-i18n-html="1"><strong>Задача:</strong> дзеркало угод лідерів з ризик-лімітами й аналітикою — інженерний контур, а не «купи все підряд».</p>
+        <p data-i18n="case9P2" data-i18n-html="1"><strong>Зробив:</strong> watcher engine, discover/score лідерів, dashboard, auto-exit / scale-in, health-check, kill-switch, деплой Docker/systemd на VPS; спільний core з sniper (CLOB, HTTP, config).</p>
+      </article>
     </section>
 
     <section id="stack">
@@ -234,6 +262,10 @@
         <div class="stack-block">
           <h3 data-i18n="stackMsg">Messaging / розсилки</h3>
           <p data-i18n="stackMsgBody">Офіційний SMS-відправник · офіційний Viber-відправник · TurboSMS · альфа-імена / sender ID · кампанії для retail</p>
+        </div>
+        <div class="stack-block">
+          <h3 data-i18n="stackMarkets">Markets / realtime</h3>
+          <p data-i18n="stackMarketsBody">Polymarket CLOB · paper→live gates · copy-trading · sniper engines · FastAPI dashboards · Hetzner / systemd</p>
         </div>
       </div>
     </section>

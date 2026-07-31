@@ -3,7 +3,7 @@
   var SUPPORTED = ["uk", "en", "de", "pl", "sk"];
 
   var SHARED = {
-    kicker: "DevOps & Full-Stack · AI for retail",
+    kicker: "DevOps & Full-Stack · AI · market systems",
     ctaPdf: "PDF",
     live: "Live:",
     figDash: "Dashboard",
@@ -11,17 +11,19 @@
     stackFe: "Frontend / Mobile",
     stackAi: "AI",
     stackDevops: "DevOps",
+    case8Title: "Polymarket BTC Sniper (5m)",
+    case9Title: "Polymarket copy-trading",
   };
 
   var T = {
     uk: Object.assign({}, SHARED, {
       metaDesc:
-        "gooru — DevOps, Full-Stack і production AI для retail: боти, OpenAI/OCR, ERP, BI, інфраструктура.",
+        "gooru — DevOps, Full-Stack, production AI для retail і market systems: боти, OpenAI/OCR, ERP, BI, Polymarket engines.",
       langAria: "Мова",
       themeLight: "Світла",
       themeDark: "Темна",
       lead:
-        "Повний контур production для retail: каса → API / бот → Docker → адмінка → моніторинг. Будую AI у проді на реальних даних — без «вигадок» моделі.",
+        "Повний контур production для retail: каса → API / бот → Docker → адмінка → моніторинг. Паралельно — market engines (sniper / copy-trading) з paper-first і ризик-гейтами. AI лише на реальних даних.",
       ctaWrite: "Написати",
       workLabel: "Кейси",
       workTitle: "Вибрані production-проєкти",
@@ -73,6 +75,14 @@
         "<strong>Задача:</strong> аналітика продажів/залишків, файловий контур команди й публічний сайт мережі.",
       case7P2:
         "<strong>Зробив:</strong> ETL → PostgreSQL → Metabase/PostgREST; Nextcloud + OnlyOffice; сайт з локатором магазинів (Maps) і CMS. Деплой і моніторинг на VPS.",
+      case8P1:
+        "<strong>Задача:</strong> низьколатентний sniper для BTC 5m Up/Down на Polymarket — спочатку paper, live лише після жорстких метрик готовності.",
+      case8P2:
+        "<strong>Зробив:</strong> окремий engine (scalper): стратегія й сигнали, paper ledger, live-gate (кількість угод / WR / t-stat / PnL), headless 24/7 на Hetzner, dashboard /sniper, CI-тести, live вимкнений за замовчуванням.",
+      case9P1:
+        "<strong>Задача:</strong> дзеркало угод лідерів з ризик-лімітами й аналітикою — інженерний контур, а не «купи все підряд».",
+      case9P2:
+        "<strong>Зробив:</strong> watcher engine, discover/score лідерів, dashboard, auto-exit / scale-in, health-check, kill-switch, деплой Docker/systemd на VPS; спільний core з sniper (CLOB, HTTP, config).",
       figGross: "Валовий прибуток",
       figSite: "Корпоративний сайт",
       figMap: "Карта магазинів",
@@ -82,10 +92,13 @@
         "OpenAI API · function calling / tool use · OCR / vision · KB і промпти · RAG-підхід до фактів · автоматизація документів і діалогів у проді",
       stackInt: "Інтеграції",
       stackIntBody:
-        "Telegram · 1С / CommerceML · Nextcloud (CalDAV / WebDAV / Deck) · Firebase · Metabase / PostgREST · Google Maps",
+        "Telegram · 1С / CommerceML · Nextcloud (CalDAV / WebDAV / Deck) · Firebase · Metabase / PostgREST · Google Maps · Polymarket CLOB",
       stackMsg: "Messaging / розсилки",
       stackMsgBody:
         "Офіційний SMS-відправник · офіційний Viber-відправник · TurboSMS · альфа-імена / sender ID · кампанії для retail",
+      stackMarkets: "Markets / realtime",
+      stackMarketsBody:
+        "Polymarket CLOB · paper→live gates · copy-trading · sniper engines · FastAPI dashboards · Hetzner / systemd",
       linksLabel: "Посилання",
       linksTitle: "Де подивитись наживо",
       linkPortfolio: "Портфоліо",
@@ -108,12 +121,12 @@
     }),
     en: Object.assign({}, SHARED, {
       metaDesc:
-        "gooru — DevOps, Full-Stack and production AI for retail: bots, OpenAI/OCR, ERP, BI, infrastructure.",
+        "gooru — DevOps, Full-Stack, production AI for retail and market systems: bots, OpenAI/OCR, ERP, BI, Polymarket engines.",
       langAria: "Language",
       themeLight: "Light",
       themeDark: "Dark",
       lead:
-        "Full production loop for retail: POS → API / bot → Docker → admin → monitoring. I ship production AI on real data — no model-made-up prices or stock.",
+        "Full production loop for retail: POS → API / bot → Docker → admin → monitoring. Also market engines (sniper / copy-trading) with paper-first risk gates. AI only on real data.",
       ctaWrite: "Email me",
       workLabel: "Work",
       workTitle: "Selected production projects",
@@ -165,6 +178,14 @@
         "<strong>Problem:</strong> sales/inventory analytics, team file cloud, and public retail site.",
       case7P2:
         "<strong>Built:</strong> ETL → PostgreSQL → Metabase/PostgREST; Nextcloud + OnlyOffice; store locator (Maps) + CMS. VPS deploy and monitoring.",
+      case8P1:
+        "<strong>Problem:</strong> low-latency BTC 5m Up/Down sniper on Polymarket — paper first, live only after hard readiness metrics.",
+      case8P2:
+        "<strong>Built:</strong> dedicated scalper engine: strategy/signals, paper ledger, live-gate (trade count / WR / t-stat / PnL), headless 24/7 on Hetzner, /sniper dashboard, CI tests, live off by default.",
+      case9P1:
+        "<strong>Problem:</strong> mirror leader trades with risk limits and analytics — an engineering loop, not blind copy-all.",
+      case9P2:
+        "<strong>Built:</strong> watcher engine, leader discover/score, dashboard, auto-exit / scale-in, health-check, kill-switch, Docker/systemd on VPS; shared core with sniper (CLOB, HTTP, config).",
       figGross: "Gross profit",
       figSite: "Corporate site",
       figMap: "Store map",
@@ -174,10 +195,13 @@
         "OpenAI API · function calling / tool use · OCR / vision · KB &amp; prompts · fact-grounded answers · document &amp; dialog automation in production",
       stackInt: "Integrations",
       stackIntBody:
-        "Telegram · 1C / CommerceML · Nextcloud (CalDAV / WebDAV / Deck) · Firebase · Metabase / PostgREST · Google Maps",
+        "Telegram · 1C / CommerceML · Nextcloud (CalDAV / WebDAV / Deck) · Firebase · Metabase / PostgREST · Google Maps · Polymarket CLOB",
       stackMsg: "Messaging / campaigns",
       stackMsgBody:
         "Official SMS sender · official Viber sender · TurboSMS · alpha names / sender ID · retail campaigns",
+      stackMarkets: "Markets / realtime",
+      stackMarketsBody:
+        "Polymarket CLOB · paper→live gates · copy-trading · sniper engines · FastAPI dashboards · Hetzner / systemd",
       linksLabel: "Links",
       linksTitle: "See it live",
       linkPortfolio: "Portfolio",
@@ -200,12 +224,12 @@
     }),
     de: Object.assign({}, SHARED, {
       metaDesc:
-        "gooru — DevOps, Full-Stack und Production-AI für Retail: Bots, OpenAI/OCR, ERP, BI, Infrastruktur.",
+        "gooru — DevOps, Full-Stack, Production-AI für Retail und Market Systems: Bots, OpenAI/OCR, ERP, BI, Polymarket-Engines.",
       langAria: "Sprache",
       themeLight: "Hell",
       themeDark: "Dunkel",
       lead:
-        "Vollständiger Production-Loop für Retail: Kasse → API / Bot → Docker → Admin → Monitoring. Production-AI auf echten Daten — ohne erfundene Preise oder Bestände.",
+        "Vollständiger Production-Loop für Retail: Kasse → API / Bot → Docker → Admin → Monitoring. Dazu Market-Engines (Sniper / Copy-Trading) mit Paper-first und Risk-Gates. AI nur auf echten Daten.",
       ctaWrite: "Schreiben",
       workLabel: "Cases",
       workTitle: "Ausgewählte Production-Projekte",
@@ -257,6 +281,14 @@
         "<strong>Aufgabe:</strong> Verkaufs-/Bestandsanalytik, Team-Datei-Cloud und öffentliche Retail-Website.",
       case7P2:
         "<strong>Gebaut:</strong> ETL → PostgreSQL → Metabase/PostgREST; Nextcloud + OnlyOffice; Filialfinder (Maps) + CMS. VPS-Deploy und Monitoring.",
+      case8P1:
+        "<strong>Aufgabe:</strong> latenzarmer BTC-5m-Up/Down-Sniper auf Polymarket — zuerst Paper, Live nur nach harten Readiness-Metriken.",
+      case8P2:
+        "<strong>Gebaut:</strong> eigener Scalper-Engine: Strategie/Signale, Paper-Ledger, Live-Gate (Trades / WR / t-Stat / PnL), Headless 24/7 auf Hetzner, Dashboard /sniper, CI-Tests, Live standardmäßig aus.",
+      case9P1:
+        "<strong>Aufgabe:</strong> Leader-Trades mit Risk-Limits und Analytics spiegeln — Engineering-Loop, kein blindes Copy-all.",
+      case9P2:
+        "<strong>Gebaut:</strong> Watcher-Engine, Leader Discover/Score, Dashboard, Auto-Exit / Scale-in, Health-Check, Kill-Switch, Docker/systemd auf VPS; gemeinsamer Core mit Sniper (CLOB, HTTP, Config).",
       figGross: "Bruttogewinn",
       figSite: "Firmenwebsite",
       figMap: "Filialkarte",
@@ -266,10 +298,13 @@
         "OpenAI API · Function Calling / Tool Use · OCR / Vision · KB &amp; Prompts · faktenbasierte Antworten · Dokument- &amp; Dialog-Automation in Produktion",
       stackInt: "Integrationen",
       stackIntBody:
-        "Telegram · 1C / CommerceML · Nextcloud (CalDAV / WebDAV / Deck) · Firebase · Metabase / PostgREST · Google Maps",
+        "Telegram · 1C / CommerceML · Nextcloud (CalDAV / WebDAV / Deck) · Firebase · Metabase / PostgREST · Google Maps · Polymarket CLOB",
       stackMsg: "Messaging / Kampagnen",
       stackMsgBody:
         "Offizieller SMS-Absender · offizieller Viber-Absender · TurboSMS · Alpha-Namen / Sender-ID · Retail-Kampagnen",
+      stackMarkets: "Markets / realtime",
+      stackMarketsBody:
+        "Polymarket CLOB · Paper→Live-Gates · Copy-Trading · Sniper-Engines · FastAPI-Dashboards · Hetzner / systemd",
       linksLabel: "Links",
       linksTitle: "Live ansehen",
       linkPortfolio: "Portfolio",
@@ -292,12 +327,12 @@
     }),
     pl: Object.assign({}, SHARED, {
       metaDesc:
-        "gooru — DevOps, Full-Stack i production AI dla retail: boty, OpenAI/OCR, ERP, BI, infrastruktura.",
+        "gooru — DevOps, Full-Stack, production AI dla retail i market systems: boty, OpenAI/OCR, ERP, BI, silniki Polymarket.",
       langAria: "Język",
       themeLight: "Jasny",
       themeDark: "Ciemny",
       lead:
-        "Pełny kontur production dla retail: kasa → API / bot → Docker → admin → monitoring. AI w produkcji na realnych danych — bez wymyślonych cen i stanów.",
+        "Pełny kontur production dla retail: kasa → API / bot → Docker → admin → monitoring. Równolegle — market engines (sniper / copy-trading) z paper-first i risk-gate’ami. AI tylko na realnych danych.",
       ctaWrite: "Napisz",
       workLabel: "Case’y",
       workTitle: "Wybrane projekty production",
@@ -349,6 +384,14 @@
         "<strong>Problem:</strong> analityka sprzedaży/stanów, chmura plików zespołu i publiczna strona sieci.",
       case7P2:
         "<strong>Zrobiłem:</strong> ETL → PostgreSQL → Metabase/PostgREST; Nextcloud + OnlyOffice; lokalizator sklepów (Maps) + CMS. Deploy i monitoring na VPS.",
+      case8P1:
+        "<strong>Problem:</strong> niskolatencyjny sniper BTC 5m Up/Down na Polymarket — najpierw paper, live dopiero po twardych metrykach gotowości.",
+      case8P2:
+        "<strong>Zrobiłem:</strong> osobny silnik scalper: strategia/sygnały, paper ledger, live-gate (liczba transakcji / WR / t-stat / PnL), headless 24/7 na Hetzner, dashboard /sniper, testy CI, live domyślnie wyłączony.",
+      case9P1:
+        "<strong>Problem:</strong> lustro transakcji liderów z limitami ryzyka i analityką — kontur inżynierski, nie ślepe copy-all.",
+      case9P2:
+        "<strong>Zrobiłem:</strong> watcher engine, discover/score liderów, dashboard, auto-exit / scale-in, health-check, kill-switch, deploy Docker/systemd na VPS; wspólny core ze sniperem (CLOB, HTTP, config).",
       figGross: "Zysk brutto",
       figSite: "Strona firmowa",
       figMap: "Mapa sklepów",
@@ -358,10 +401,13 @@
         "OpenAI API · function calling / tool use · OCR / vision · KB i prompty · odpowiedzi oparte na faktach · automatyzacja dokumentów i dialogów w produkcji",
       stackInt: "Integracje",
       stackIntBody:
-        "Telegram · 1C / CommerceML · Nextcloud (CalDAV / WebDAV / Deck) · Firebase · Metabase / PostgREST · Google Maps",
+        "Telegram · 1C / CommerceML · Nextcloud (CalDAV / WebDAV / Deck) · Firebase · Metabase / PostgREST · Google Maps · Polymarket CLOB",
       stackMsg: "Messaging / kampanie",
       stackMsgBody:
         "Oficjalny nadawca SMS · oficjalny nadawca Viber · TurboSMS · nazwy alfa / sender ID · kampanie retail",
+      stackMarkets: "Markets / realtime",
+      stackMarketsBody:
+        "Polymarket CLOB · paper→live gates · copy-trading · sniper engines · FastAPI dashboards · Hetzner / systemd",
       linksLabel: "Linki",
       linksTitle: "Zobacz na żywo",
       linkPortfolio: "Portfolio",
@@ -384,12 +430,12 @@
     }),
     sk: Object.assign({}, SHARED, {
       metaDesc:
-        "gooru — DevOps, Full-Stack a production AI pre retail: boty, OpenAI/OCR, ERP, BI, infraštruktúra.",
+        "gooru — DevOps, Full-Stack, production AI pre retail a market systems: boty, OpenAI/OCR, ERP, BI, Polymarket engines.",
       langAria: "Jazyk",
       themeLight: "Svetlá",
       themeDark: "Tmavá",
       lead:
-        "Celý production kontúr pre retail: pokladňa → API / bot → Docker → admin → monitoring. AI v produkcii na reálnych dátach — bez vymyslených cien a stavov.",
+        "Celý production kontúr pre retail: pokladňa → API / bot → Docker → admin → monitoring. Paralelne — market engines (sniper / copy-trading) s paper-first a risk gateami. AI len na reálnych dátach.",
       ctaWrite: "Napísať",
       workLabel: "Príklady",
       workTitle: "Vybrané production projekty",
@@ -441,6 +487,14 @@
         "<strong>Úloha:</strong> analytika predaja/skladov, cloud súborov tímu a verejný web siete.",
       case7P2:
         "<strong>Urobil som:</strong> ETL → PostgreSQL → Metabase/PostgREST; Nextcloud + OnlyOffice; lokátor predajní (Maps) + CMS. Deploy a monitoring na VPS.",
+      case8P1:
+        "<strong>Úloha:</strong> nízkolatenčný sniper BTC 5m Up/Down na Polymarket — najprv paper, live až po tvrdých metriách pripravenosti.",
+      case8P2:
+        "<strong>Urobil som:</strong> samostatný scalper engine: stratégia/signály, paper ledger, live-gate (počet obchodov / WR / t-stat / PnL), headless 24/7 na Hetzner, dashboard /sniper, CI testy, live predvolene vypnutý.",
+      case9P1:
+        "<strong>Úloha:</strong> zrkadlo obchodov lídrov s risk limitmi a analytikou — inžiniersky kontúr, nie slepé copy-all.",
+      case9P2:
+        "<strong>Urobil som:</strong> watcher engine, discover/score lídrov, dashboard, auto-exit / scale-in, health-check, kill-switch, deploy Docker/systemd na VPS; spoločný core so sniperom (CLOB, HTTP, config).",
       figGross: "Hrubý zisk",
       figSite: "Firemný web",
       figMap: "Mapa predajní",
@@ -450,10 +504,13 @@
         "OpenAI API · function calling / tool use · OCR / vision · KB a promptty · odpovede založené na faktoch · automatizácia dokumentov a dialógov v produkcii",
       stackInt: "Integrácie",
       stackIntBody:
-        "Telegram · 1C / CommerceML · Nextcloud (CalDAV / WebDAV / Deck) · Firebase · Metabase / PostgREST · Google Maps",
+        "Telegram · 1C / CommerceML · Nextcloud (CalDAV / WebDAV / Deck) · Firebase · Metabase / PostgREST · Google Maps · Polymarket CLOB",
       stackMsg: "Messaging / kampane",
       stackMsgBody:
         "Oficiálny SMS odosielateľ · oficiálny Viber odosielateľ · TurboSMS · alfa mená / sender ID · retail kampane",
+      stackMarkets: "Markets / realtime",
+      stackMarketsBody:
+        "Polymarket CLOB · paper→live gates · copy-trading · sniper engines · FastAPI dashboards · Hetzner / systemd",
       linksLabel: "Odkazy",
       linksTitle: "Pozrieť naživo",
       linkPortfolio: "Portfólio",
