@@ -201,16 +201,21 @@ a:hover {
 
 /* —— Hero —— */
 .hero {
-  padding: 4.75rem 0 3.75rem;
+  padding: 3.25rem 0 2.75rem;
   border-bottom: 1px solid var(--line);
   animation: rise 0.7s ease both;
 }
 
 .hero--immersive {
+  --hero-gap-xs: 0.55rem;
+  --hero-gap-sm: 0.85rem;
+  --hero-gap-md: 1.25rem;
+  --hero-gap-lg: 1.65rem;
   position: relative;
-  display: block;
-  min-height: min(88vh, 740px);
-  padding: 4.25rem 0 4.5rem;
+  display: flex;
+  align-items: center;
+  min-height: min(72vh, 620px);
+  padding: 2.25rem 0 2.75rem;
   overflow: hidden;
   isolation: isolate;
 }
@@ -248,12 +253,16 @@ a:hover {
 .hero-copy {
   position: relative;
   z-index: 2;
-  max-width: 36rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 34rem;
+  width: 100%;
   animation: rise 0.85s ease both;
 }
 
 .hero-kicker {
-  margin: 0 0 0.95rem;
+  margin: 0 0 var(--hero-gap-sm);
   font-family: var(--font-mono);
   color: var(--accent);
   font-size: 0.78rem;
@@ -265,17 +274,17 @@ a:hover {
 .hero h1 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(3.4rem, 9vw, 5.8rem);
+  font-size: clamp(3.1rem, 8vw, 5.2rem);
   font-weight: 700;
-  line-height: 0.92;
+  line-height: 0.94;
   letter-spacing: -0.055em;
 }
 
 .hero-lead {
-  margin: 1.35rem 0 0;
-  max-width: 34rem;
+  margin: var(--hero-gap-md) 0 0;
+  max-width: 32rem;
   color: var(--muted-strong);
-  font-size: 1.08rem;
+  font-size: 1.05rem;
   font-weight: 400;
   line-height: 1.55;
 }
@@ -283,8 +292,8 @@ a:hover {
 .cta-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.65rem;
-  margin-top: 1.85rem;
+  gap: 0.6rem;
+  margin-top: var(--hero-gap-lg);
 }
 
 .btn {
@@ -328,7 +337,7 @@ a:hover {
 }
 
 .meta-line {
-  margin: 1.5rem 0 0;
+  margin: var(--hero-gap-md) 0 0;
   color: var(--muted);
   font-family: var(--font-mono);
   font-size: 0.8rem;
@@ -340,11 +349,11 @@ a:hover {
 }
 
 .hero-live-node {
-  margin: 1.1rem 0 0;
-  min-height: 1.3rem;
+  margin: var(--hero-gap-xs) 0 0;
+  min-height: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem 0.7rem;
+  gap: 0.3rem 0.65rem;
   align-items: baseline;
   font-family: var(--font-mono);
   pointer-events: none;
@@ -391,12 +400,12 @@ a:hover {
 
 /* —— Sections —— */
 section {
-  padding: 4.25rem 0;
+  padding: 3.25rem 0;
   border-bottom: 1px solid var(--line);
 }
 
 .section-label {
-  margin: 0 0 0.45rem;
+  margin: 0 0 0.35rem;
   font-family: var(--font-mono);
   color: var(--accent);
   font-size: 0.72rem;
@@ -406,7 +415,7 @@ section {
 }
 
 .section-title {
-  margin: 0 0 2rem;
+  margin: 0 0 1.5rem;
   font-family: var(--font-display);
   font-size: clamp(1.7rem, 3vw, 2.2rem);
   font-weight: 600;
@@ -416,8 +425,8 @@ section {
 
 /* —— Cases —— */
 .case {
-  padding: 1.75rem 1.35rem;
-  margin: 0 0 0.85rem;
+  padding: 1.35rem 1.2rem;
+  margin: 0 0 0.7rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: color-mix(in srgb, var(--bg-elev) 88%, transparent);
@@ -589,8 +598,13 @@ footer p {
 
 @media (max-width: 900px) {
   .hero--immersive {
+    --hero-gap-xs: 0.45rem;
+    --hero-gap-sm: 0.7rem;
+    --hero-gap-md: 1.05rem;
+    --hero-gap-lg: 1.35rem;
+    align-items: flex-start;
     min-height: auto;
-    padding: 2.85rem 0 3.1rem;
+    padding: 1.75rem 0 2.25rem;
   }
 
   .hero--immersive::before {
@@ -609,17 +623,26 @@ footer p {
   }
 
   .case {
-    padding: 1.35rem 1rem;
+    padding: 1.15rem 0.95rem;
+  }
+
+  section {
+    padding: 2.5rem 0;
   }
 }
 
 @media (max-width: 640px) {
   .hero {
-    padding: 3rem 0 2.5rem;
+    padding: 2.25rem 0 2rem;
+  }
+
+  .hero--immersive {
+    padding: 1.35rem 0 1.85rem;
   }
 
   .cta-row {
     flex-direction: column;
+    width: 100%;
   }
 
   .btn {
@@ -629,12 +652,21 @@ footer p {
   .topbar {
     flex-wrap: wrap;
     height: auto;
-    padding: 0.75rem 0;
+    padding: 0.65rem 0;
+    gap: 0.65rem;
   }
 
   .lang button,
   .lang a {
     padding: 0.32rem 0.42rem;
+  }
+
+  section {
+    padding: 2.15rem 0;
+  }
+
+  .section-title {
+    margin-bottom: 1.2rem;
   }
 }
 
