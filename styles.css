@@ -230,7 +230,7 @@ a:hover {
   z-index: 1;
   pointer-events: none;
   background:
-    linear-gradient(90deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 90%, transparent) 34%, transparent 64%),
+    linear-gradient(90deg, var(--bg) 0%, var(--bg) 28%, color-mix(in srgb, var(--bg) 92%, transparent) 46%, color-mix(in srgb, var(--bg) 55%, transparent) 58%, transparent 72%),
     linear-gradient(180deg, color-mix(in srgb, var(--bg) 40%, transparent) 0%, transparent 30%, transparent 70%, color-mix(in srgb, var(--bg) 65%, transparent) 100%);
 }
 
@@ -259,8 +259,9 @@ a:hover {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  max-width: 34rem;
+  max-width: min(34rem, 52%);
   width: 100%;
+  padding-right: clamp(1.25rem, 4vw, 2.5rem);
   animation: rise 0.85s ease both;
 }
 
@@ -428,7 +429,7 @@ section {
 
 /* —— Cases —— */
 .case {
-  padding: 1.35rem 1.2rem;
+  padding: 1.5rem 1.6rem;
   margin: 0 0 0.7rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -534,7 +535,7 @@ section {
 }
 
 .stack-block {
-  padding: 1.1rem 1.15rem;
+  padding: 1.25rem 1.4rem;
   background: var(--bg-elev);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -623,6 +624,7 @@ footer p {
 
   .hero-copy {
     max-width: 100%;
+    padding-right: 0.75rem;
   }
 
   .case {

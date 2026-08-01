@@ -52,11 +52,11 @@
           { id: 4, nx: 0.9, ny: 0.62, r: 10 },
         ]
       : [
-          { id: 0, nx: 0.46, ny: 0.4, r: 13 },
-          { id: 1, nx: 0.58, ny: 0.22, r: 12 },
-          { id: 2, nx: 0.7, ny: 0.48, r: 16 },
-          { id: 3, nx: 0.82, ny: 0.26, r: 12 },
-          { id: 4, nx: 0.93, ny: 0.52, r: 12 },
+          { id: 0, nx: 0.56, ny: 0.4, r: 13 },
+          { id: 1, nx: 0.66, ny: 0.22, r: 12 },
+          { id: 2, nx: 0.76, ny: 0.48, r: 16 },
+          { id: 3, nx: 0.86, ny: 0.26, r: 12 },
+          { id: 4, nx: 0.95, ny: 0.52, r: 12 },
         ];
 
     hubs = layout;
@@ -88,7 +88,7 @@
       var dist = (narrow ? 42 : 55) + (i % 5) * 14;
       var sx = anchor.ox + Math.cos(ang) * dist;
       var sy = anchor.oy + Math.sin(ang) * dist * 0.72;
-      if (!narrow && sx < w * 0.4) sx = w * 0.4 + Math.random() * 40;
+      if (!narrow && sx < w * 0.52) sx = w * 0.52 + Math.random() * 40;
       satellites.push({
         x: sx,
         y: sy,
@@ -105,7 +105,7 @@
   function spawnDust() {
     var count = Math.min(120, Math.max(55, Math.floor((w * h) / 5500)));
     dust = [];
-    var minX = narrow ? 0.08 : 0.38;
+    var minX = narrow ? 0.08 : 0.52;
     for (var i = 0; i < count; i++) {
       dust.push({
         x: (minX + Math.random() * (1 - minX)) * w,
@@ -268,7 +268,7 @@
     ctx.globalAlpha = 1;
 
     var connectDist = Math.min(118, w * 0.2);
-    var minX = narrow ? 0 : w * 0.36;
+    var minX = narrow ? 0 : w * 0.5;
     for (var i = 0; i < dust.length; i++) {
       var p = dust[i];
       if (!reduced) {
