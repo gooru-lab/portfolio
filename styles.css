@@ -490,6 +490,16 @@ section {
   margin-top: 1.2rem;
 }
 
+.interiors-grid {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.interiors-grid img {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: center;
+}
+
 .shots figure {
   margin: 0;
   background: var(--bg);
