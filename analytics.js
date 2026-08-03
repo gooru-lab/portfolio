@@ -1,34 +1,11 @@
 /**
- * Google Analytics 4 + click tracking for gooru portfolio.
- * 1) Create property: https://analytics.google.com/ → Admin → Data stream → Web
- * 2) Paste Measurement ID below (looks like G-XXXXXXXXXX)
- * 3) Push / wait ~1 min → open Realtime in GA to verify
+ * Click tracking on top of the official gtag snippet in <head>.
+ * Measurement ID: G-QQHY5TNCYT
  */
 (function () {
-  var GA_MEASUREMENT_ID = "G-QQHY5TNCYT";
-
-  if (!GA_MEASUREMENT_ID) return;
-
-  window.dataLayer = window.dataLayer || [];
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-  window.gtag = gtag;
-
-  var s = document.createElement("script");
-  s.async = true;
-  s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_MEASUREMENT_ID;
-  document.head.appendChild(s);
-
-  gtag("js", new Date());
-  gtag("config", GA_MEASUREMENT_ID, {
-    anonymize_ip: true,
-    send_page_view: true,
-  });
-
   function track(name, params) {
-    if (typeof gtag !== "function") return;
-    gtag("event", name, params || {});
+    if (typeof window.gtag !== "function") return;
+    window.gtag("event", name, params || {});
   }
 
   document.addEventListener(
