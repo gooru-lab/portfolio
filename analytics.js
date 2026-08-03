@@ -5,7 +5,7 @@
  * 3) Push / wait ~1 min → open Realtime in GA to verify
  */
 (function () {
-  var GA_MEASUREMENT_ID = ""; // e.g. "G-XXXXXXXXXX"
+  var GA_MEASUREMENT_ID = "G-QQHY5TNCYT";
 
   if (!GA_MEASUREMENT_ID) return;
 
