@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gooru-lab.github.io/portfolio/sitemap.xml
