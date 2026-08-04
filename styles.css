@@ -526,6 +526,18 @@ section {
   transform: scale(1.02);
 }
 
+
+.phone-shots {
+  grid-template-columns: repeat(auto-fill, minmax(140px, 180px));
+  justify-content: start;
+}
+
+.phone-shots img {
+  aspect-ratio: 9 / 19.5;
+  object-fit: cover;
+  object-position: top center;
+}
+
 .shots figcaption {
   padding: 0.5rem 0.7rem;
   font-family: var(--font-mono);

@@ -58,13 +58,16 @@
         "<strong>Зробив:</strong> full-stack ERP (~80 точок мережі): працівники, розклад, розрахунок ЗП, KPI, перегляди й деталі нарахувань.",
       figPayDetails: "Деталі нарахувань",
       figPayView: "Перегляд ЗП",
-      case5Title: "Loyalty Admin",
+      case5Title: "Loyalty: Admin + Android",
       case5P1:
-        "<strong>Задача:</strong> контроль чеків і балів лояльності з інтеграцією облікової системи.",
+        "<strong>Задача:</strong> повний контур лояльності: каса 1С → API → адмінка + мобільний клієнт для покупця (баланс, штрихкод, акції).",
       case5P2:
-        "<strong>Зробив:</strong> адмін-панель: моніторинг чеків, категорії, зв’язок з 1С.",
+        "<strong>Зробив:</strong> web-admin (чеки, категорії, інтеграція 1С) + Android-додаток Ambar Loyalty (Compose): картка з балансом і barcode, профіль/транзакції, налаштування й push. Статус: пілот / ще не в публічному проді.",
       figChecks: "Моніторинг чеків",
       figCats: "Категорії",
+      figLoyalHome: "Android · головна / картка",
+      figLoyalProfile: "Android · профіль",
+      figLoyalSettings: "Android · налаштування",
       case6Title: "SMS / Viber розсилки для retail",
       case6P1:
         "<strong>Задача:</strong> офіційні канали сповіщень мережі — не «з сірого номера», а узгоджений відправник під бренд.",
@@ -196,13 +199,16 @@
         "<strong>Built:</strong> full-stack ERP (~80 retail locations): employees, schedule, salary calc, KPI, payroll views and details.",
       figPayDetails: "Payroll details",
       figPayView: "Payroll view",
-      case5Title: "Loyalty Admin",
+      case5Title: "Loyalty: Admin + Android",
       case5P1:
-        "<strong>Problem:</strong> monitor receipts and loyalty points with accounting integration.",
+        "<strong>Problem:</strong> full loyalty loop: POS/1C → API → admin + customer Android app (balance, barcode, promos).",
       case5P2:
-        "<strong>Built:</strong> admin panel: checks monitoring, categories, 1C integration.",
+        "<strong>Built:</strong> web-admin (checks, categories, 1C) + Ambar Loyalty Android (Compose): card with balance & barcode, profile/transactions, settings & push. Status: pilot / not in public prod yet.",
       figChecks: "Checks monitoring",
       figCats: "Categories",
+      figLoyalHome: "Android · home / card",
+      figLoyalProfile: "Android · profile",
+      figLoyalSettings: "Android · settings",
       case6Title: "SMS / Viber messaging for retail",
       case6P1:
         "<strong>Problem:</strong> official notification channels for a retail chain — branded senders, not grey-route numbers.",
@@ -334,13 +340,16 @@
         "<strong>Gebaut:</strong> Full-Stack-ERP (~80 Filialen): Mitarbeiter, Schichtplan, Gehaltsberechnung, KPI, Ansichten und Details.",
       figPayDetails: "Abrechnungsdetails",
       figPayView: "Gehaltsansicht",
-      case5Title: "Loyalty Admin",
+      case5Title: "Loyalty: Admin + Android",
       case5P1:
-        "<strong>Aufgabe:</strong> Bons und Treuepunkte mit Anbindung an die Buchhaltung steuern.",
+        "<strong>Aufgabe:</strong> voller Loyalty-Kreis: Kasse/1C → API → Admin + Kunden-App (Saldo, Barcode, Aktionen).",
       case5P2:
-        "<strong>Gebaut:</strong> Admin-Panel: Bon-Monitoring, Kategorien, 1C-Anbindung.",
+        "<strong>Gebaut:</strong> Web-Admin (Bons, Kategorien, 1C) + Ambar Loyalty Android (Compose): Karte mit Saldo & Barcode, Profil/Transaktionen, Einstellungen & Push. Status: Pilot / noch nicht öffentlich live.",
       figChecks: "Bon-Monitoring",
       figCats: "Kategorien",
+      figLoyalHome: "Android · Start / Karte",
+      figLoyalProfile: "Android · Profil",
+      figLoyalSettings: "Android · Einstellungen",
       case6Title: "SMS / Viber für Retail",
       case6P1:
         "<strong>Aufgabe:</strong> offizielle Benachrichtigungskanäle der Kette — Marken-Absender, keine Grauzahlen.",
@@ -472,13 +481,16 @@
         "<strong>Zrobiłem:</strong> full-stack ERP (~80 punktów sieci): pracownicy, grafik, kalkulacja pensji, KPI, widoki i szczegóły.",
       figPayDetails: "Szczegóły wypłat",
       figPayView: "Widok pensji",
-      case5Title: "Loyalty Admin",
+      case5Title: "Loyalty: Admin + Android",
       case5P1:
-        "<strong>Problem:</strong> kontrola paragonów i punktów lojalności z integracją księgową.",
+        "<strong>Problem:</strong> pełny kontur lojalności: kasa/1C → API → admin + aplikacja klienta (saldo, kod kreskowy, promocje).",
       case5P2:
-        "<strong>Zrobiłem:</strong> panel admina: monitoring paragonów, kategorie, powiązanie z 1C.",
+        "<strong>Zrobiłem:</strong> web-admin (paragony, kategorie, 1C) + Ambar Loyalty Android (Compose): karta z saldem i barcode, profil/transakcje, ustawienia i push. Status: pilot / jeszcze nie w publicznym prodzie.",
       figChecks: "Monitoring paragonów",
       figCats: "Kategorie",
+      figLoyalHome: "Android · start / karta",
+      figLoyalProfile: "Android · profil",
+      figLoyalSettings: "Android · ustawienia",
       case6Title: "SMS / Viber dla retail",
       case6P1:
         "<strong>Problem:</strong> oficjalne kanały powiadomień sieci — nadawca pod markę, nie szare numery.",
@@ -610,13 +622,16 @@
         "<strong>Urobil som:</strong> full-stack ERP (~80 predajní): zamestnanci, rozvrh, výpočet miezd, KPI, pohľady a detaily.",
       figPayDetails: "Detaily výplat",
       figPayView: "Pohľad na mzdy",
-      case5Title: "Loyalty Admin",
+      case5Title: "Loyalty: Admin + Android",
       case5P1:
-        "<strong>Úloha:</strong> kontrola bločkov a vernostných bodov s napojením na účtovníctvo.",
+        "<strong>Úloha:</strong> plný kontúr vernosti: pokladňa/1C → API → admin + mobilná appka (zostatok, barcode, akcie).",
       case5P2:
-        "<strong>Urobil som:</strong> admin panel: monitoring bločkov, kategórie, väzba na 1C.",
+        "<strong>Urobil som:</strong> web-admin (bločky, kategórie, 1C) + Ambar Loyalty Android (Compose): karta so zostatkom a barcode, profil/transakcie, nastavenia a push. Status: pilot / ešte nie vo verejnom prode.",
       figChecks: "Monitoring bločkov",
       figCats: "Kategórie",
+      figLoyalHome: "Android · domov / karta",
+      figLoyalProfile: "Android · profil",
+      figLoyalSettings: "Android · nastavenia",
       case6Title: "SMS / Viber pre retail",
       case6P1:
         "<strong>Úloha:</strong> oficiálne kanály notifikácií siete — odosielateľ pod značku, nie sivé čísla.",

@@ -23,7 +23,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="styles.css?v=9">
   <script src="theme.js"></script>
   <script src="i18n.js"></script>
   <script type="application/ld+json">
@@ -170,15 +170,17 @@
 
       <article class="case">
         <div class="case-head">
-          <h3 data-i18n="case5Title">Loyalty Admin</h3>
+          <h3 data-i18n="case5Title">Loyalty: Admin + Android</h3>
           <div class="case-tags">
             <span class="tag">React</span>
             <span class="tag">FastAPI</span>
             <span class="tag">1С</span>
+            <span class="tag">Android</span>
+            <span class="tag">Compose</span>
           </div>
         </div>
-        <p class="problem" data-i18n="case5P1" data-i18n-html="1"><strong>Задача:</strong> контроль чеків і балів лояльності з інтеграцією облікової системи.</p>
-        <p data-i18n="case5P2" data-i18n-html="1"><strong>Зробив:</strong> адмін-панель: моніторинг чеків, категорії, зв’язок з 1С.</p>
+        <p class="problem" data-i18n="case5P1" data-i18n-html="1"><strong>Задача:</strong> повний контур лояльності: каса 1С → API → адмінка + мобільний клієнт для покупця (баланс, штрихкод, акції).</p>
+        <p data-i18n="case5P2" data-i18n-html="1"><strong>Зробив:</strong> web-admin (чеки, категорії, інтеграція 1С) + Android-додаток Ambar Loyalty (Compose): картка з балансом і barcode, профіль/транзакції, налаштування й push. Статус: пілот / ще не в публічному проді.</p>
         <div class="shots">
           <figure>
             <img src="loyalty/01-checks-monitoring.png" alt="Checks monitoring" loading="lazy">
@@ -187,6 +189,20 @@
           <figure>
             <img src="loyalty/02-categories.png" alt="Categories" loading="lazy">
             <figcaption data-i18n="figCats">Категорії</figcaption>
+          </figure>
+        </div>
+        <div class="shots phone-shots">
+          <figure>
+            <img src="loyalty/01-home-card.png" alt="Ambar Loyalty home" loading="lazy">
+            <figcaption data-i18n="figLoyalHome">Android · головна / картка</figcaption>
+          </figure>
+          <figure>
+            <img src="loyalty/02-profile.png" alt="Ambar Loyalty profile" loading="lazy">
+            <figcaption data-i18n="figLoyalProfile">Android · профіль</figcaption>
+          </figure>
+          <figure>
+            <img src="loyalty/03-settings.png" alt="Ambar Loyalty settings" loading="lazy">
+            <figcaption data-i18n="figLoyalSettings">Android · налаштування</figcaption>
           </figure>
         </div>
       </article>
