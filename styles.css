@@ -704,3 +704,77 @@ footer p {
     transition: none;
   }
 }
+
+/* —— Ready demos bridge (not a full web3 restyle) —— */
+.links-note {
+  margin: -0.35rem 0 1rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  max-width: 42rem;
+}
+
+.links {
+  margin-bottom: 0.85rem;
+}
+
+.links--demos {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+  background:
+    radial-gradient(520px 180px at 100% 0%, var(--accent-soft), transparent 60%),
+    var(--bg-elev);
+}
+
+.link-row--demo {
+  align-items: center;
+  gap: 0.55rem 0.75rem;
+}
+
+.link-row--demo strong {
+  color: var(--muted-strong);
+  min-width: 9.5rem;
+}
+
+.demo-chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-elev-2);
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.demo-chip:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.demo-meta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.links--contact {
+  opacity: 0.98;
+}
+
+.case a[href*="sslip.io"],
+.case a[href*="/parser"],
+.case a[href*="sales-demo"],
+.case a[href*="bot-kit"],
+.case a[href*="marketing"],
+.case a[href*="1c-bridge"],
+.case a[href*="ai-box"],
+.case a[href*="t.me/"] {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
